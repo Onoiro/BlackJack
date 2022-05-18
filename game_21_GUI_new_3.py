@@ -149,6 +149,7 @@ def get_pc_cards(my_points):
             break
 
         elif pc_points >= 17:
+            # если у pc очков более 17 - больше не набирает карты
             lbl = Label(window, text=f"PC got {pc_points}.")
             lbl.grid(column=1, row=10)
             lbls.append(lbl)
@@ -157,6 +158,7 @@ def get_pc_cards(my_points):
                 balance = my_total_points - pc_total_points
                 show_total_score()
             elif my_points == pc_points:
+                # при равном кол-ве очков ставка увеличивается в 2 раза
                 increase_points *= 2
                 lbl = Label(window, text='Nobody win\n double points\n next deal')
                 lbl.grid(column=1, row=14)
