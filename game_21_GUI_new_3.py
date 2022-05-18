@@ -215,7 +215,7 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     lbl_name.destroy()
     name_btn.destroy()
     name_entry.destroy()
-    lbl = Label(window, text=f"Hello {name}!")
+    lbl = Label(window, text=f"Good luck {name}!")
     lbl.grid(column=1, row=0)
     btn_take.config(state='normal')
 
