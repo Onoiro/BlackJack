@@ -1,4 +1,5 @@
 """Game BlackJack (21, point)"""
+# Простой вариант игры "Очко" (или 21, или BlackJack)
 
 from random import randint
 import sys
@@ -12,11 +13,13 @@ cards = []
 # Счет игры
 my_total_points = 0
 pc_total_points = 0
+# коэффицент увеличения total_points - при равном кол-ве очков удвоение
 increase_points = 1
 
 name = input('What is your name? ')
 
 def exit_game():
+    # для выхода из игры нужно нажать "q"
     game_active = input('If do you want to quit press "q" or press Enter \n')
     if game_active == 'q':
         sys.exit()
@@ -82,7 +85,7 @@ while True:
             # добавляю кол-во очков, в зависимости от карты
             my_points += count_points(my_cards, card_number)
             card_number += 1
-            # раздача сразу по 2 карты
+            # раздача игроку сразу по 2 карты
             if card_number < 2:
                 my_cards.append(deal())
                 my_points += count_points(my_cards, card_number)
@@ -90,10 +93,11 @@ while True:
             print(f"{name} cards is: {my_cards}, {my_points} points")
 
             if my_points > 21:
+                # если кол-во очков более 21 - перебор
                 print('Too many - loose')
                 my_points = 0
                 break
-
+            # если карт достаточно - напишите "q", если нет - нажмите Enter
             command = input('More or quit? (press Enter or "q") \n')
             if command == 'q':
                 break
@@ -134,6 +138,7 @@ while True:
             increase_points = 1
             print(name, ' win \n')
         elif my == pc:
+            # если кол-во очков равно - коэффицент начисления total_points удваивается
             increase_points = 2
             print('Nobody win \nNext draw with double points')
         else:

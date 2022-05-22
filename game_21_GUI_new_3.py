@@ -1,8 +1,8 @@
 """Game BlackJack (21, point)"""
+# Игра "Очко" ("21" или BlackJack) с использованием Tkinter
 
 from tkinter import*
 from random import randint
-import sys
 
 # Масти и номиналы карт
 card_suits = ['Diamonds', 'Hearts', 'Clubs', 'Spades']
@@ -74,13 +74,14 @@ def count_points(value):
 
 
 def get_my_cards():
+    # набор карт игрока
     global pc_total_points
     global name
     global balance
 
-    # кнонка play_again пока недоступна
+    # кнонка play again пока недоступна
     btn_clear.config(state='disabled')
-    # вызываю метод deal, чтобы выдать мне карту
+    # вызываю функцию deal, чтобы выдать мне карту
     my_cards.append(deal())
     # рассчитываем кол-во очков в зависмоати от выданной карты
     my_points = count_points(my_cards)
@@ -119,6 +120,7 @@ def get_my_cards():
 
 
 def get_pc_cards(my_points):
+    # набор карт компа
     global my_total_points
     global pc_total_points
     global increase_points
@@ -191,15 +193,20 @@ def show_total_score():
 
 
 def play(lbls):
+    # новая раздача
     global my_cards
     global pc_cards
+    # карты игрока и PC обнуляются
     my_cards = []
     pc_cards = []
+    # стираю с экрана карты с предыдущей раздачи
     for lbl in lbls:
         lbl.destroy()
+    # кнопка Take card активна
     btn_take.config(state='normal')
 
 def init_name():
+    # ввод имени игрока
     global name
     lbl_name = Label(window, text="What is your name?")
     lbl_name.grid(column=0, row=0)
@@ -212,8 +219,8 @@ def init_name():
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
+    # вместо поля для ввода имени вывожу приветствие
     name = name_entry.get()
-
     lbl_name.destroy()
     name_btn.destroy()
     name_entry.destroy()
@@ -225,7 +232,6 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
 window = Tk()
 window.title("21")
 window.geometry("370x330")
-#lbl = Label(window, text="")
 name = StringVar()
 init_name()
 
@@ -245,7 +251,7 @@ lbl.grid(column=1, row=1)
 lbl = Label(window, text="balance")
 lbl.grid(column=2, row=1)
 
-# кнопка - карты обнуляются, новая сдача
+# кнопка Play again - карты обнуляются, новая сдача
 btn_clear = Button(window, text="Play again", width=16, command=lambda: play(lbls))
 btn_clear.grid(column=2, row=3)
 
