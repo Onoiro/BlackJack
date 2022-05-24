@@ -12,7 +12,10 @@ cards = []
 # Общий счет игры
 my_total_points = 0
 pc_total_points = 0
+# разница между my_total_points и pc_total_points
 balance = 0
+# лучшая разница в истории
+best_balance = 0
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
@@ -20,6 +23,10 @@ pc_cards = []
 lbls = []
 # коэффицент начисления очков за победу
 increase_points = 1
+# имя игрока
+player_name = ""
+# имя игрока с лучшим результатом
+best_player = ""
 
 
 def deal():
@@ -76,7 +83,6 @@ def count_points(value):
 def get_my_cards():
     # набор карт игрока
     global pc_total_points
-    global name
     global balance
 
     # кнонка play again пока недоступна
@@ -137,11 +143,14 @@ def get_pc_cards(my_points):
         pc_points = count_points(pc_cards)
 
         for i in range(len(pc_cards)):
+            # вывод на экран карт PC
             lbl = Label(window, text=pc_cards[i])
             lbl.grid(column=1, row=4 + i)
+            # все надписи на экране добавляются в список
             lbls.append(lbl)
 
         if pc_points > 21:
+            # если у PC перебор
             lbl = Label(window, text="Too much")
             lbl.grid(column=1, row=10)
             my_total_points += 1 * increase_points
@@ -155,7 +164,9 @@ def get_pc_cards(my_points):
             lbl = Label(window, text=f"PC got {pc_points}.")
             lbl.grid(column=1, row=10)
             lbls.append(lbl)
+            # определение победителя
             if my_points > pc_points:
+                # к общему счету игрока прибавляется 1
                 my_total_points += 1 * increase_points
                 balance = my_total_points - pc_total_points
                 show_total_score()
@@ -181,15 +192,21 @@ def get_pc_cards(my_points):
 
 
 def show_total_score():
+    global best_balance
     # общий счет - мои очки
     my_total = Label(window, text=my_total_points)
     my_total.grid(column=0, row=2)
     # общий счет - очки компьютера
     pc_total = Label(window, text=pc_total_points)
     pc_total.grid(column=1, row=2)
-
+    # баланс - разница между очками игрока и PC
     total_balance = Label(window, text=balance)
     total_balance.grid(column=2, row=2)
+
+    # определяю если текущий баланс лучще рекордного баланса
+    if balance > best_balance:
+        best_balance = balance
+        show_best_records()
 
 
 def play(lbls):
@@ -207,43 +224,58 @@ def play(lbls):
 
 def init_name():
     # ввод имени игрока
-    global name
+    # запрос имени игрока
     lbl_name = Label(window, text="What is your name?")
     lbl_name.grid(column=0, row=0)
-
-    name_entry = Entry(textvariable=name, width=20)
+    # окно ввода
+    name_entry = Entry(textvariable=player_name, width=20)
     name_entry.grid(column=1, row=0)
+    # установка курсора в поле ввода
     name_entry.focus()
+    # кнопка подтверждения имени -> функция активирует кнопку Take card
     name_btn = Button(text="0K", width=16, command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
     name_btn.grid(column=2, row=0)
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
-    # вместо поля для ввода имени вывожу приветствие
-    name = name_entry.get()
+    global player_name
+    # инициализация имени игрока
+    player_name = name_entry.get()
+    # убираю с экрана все поля, связанные с вводом имени игрока
     lbl_name.destroy()
     name_btn.destroy()
     name_entry.destroy()
-    lbl = Label(window, text=f"Good luck {name}!")
-    lbl.grid(column=1, row=0)
+    # вместо поля для ввода имени вывожу приветствие
+    lbl = Label(window, text=f"Good luck {player_name}!")
+    lbl.grid(column=0, row=0)
+    # кнопка Take card становится активной после ввода имени игрока
     btn_take.config(state='normal')
+
+
+def show_best_records():
+    # Вывод лучшего результата
+    best_player = player_name
+    lbl = Label(window, text=f"Best balance: {best_player} {best_balance}")
+    lbl.grid(column=0, row=20)
 
 
 window = Tk()
 window.title("21")
 window.geometry("370x330")
-name = StringVar()
+
 init_name()
 
-# кнопка - взять еще карту
+# кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", width=16, command=get_my_cards)
 btn_take.grid(column=0, row=3)
 btn_take.config(state='disabled')
 
+# кнопка Enough - игроку больше не нужно карт, ход переходит к PC
 btn_enough = Button(window, text="Enough", width=16, command=get_pc_cards)
 btn_enough.grid(column=1, row=3)
 btn_enough.config(state='disabled')
 
+# вывод общего счета
 lbl = Label(window, text="your total score")
 lbl.grid(column=0, row=1)
 lbl = Label(window, text="pc total score")
