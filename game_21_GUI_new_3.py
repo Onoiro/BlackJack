@@ -16,7 +16,9 @@ pc_total_points = 0
 # разница между my_total_points и pc_total_points
 balance = 0
 # лучшая разница в истории
-best_balance = 0
+filename = 'record.json'
+with open(filename) as f:
+    best_balance = json.load(f)
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
@@ -204,6 +206,7 @@ def show_total_score():
     total_balance = Label(window, text=balance)
     total_balance.grid(column=2, row=2)
 
+
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
         best_balance = balance
@@ -254,13 +257,14 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
 
 
 def show_best_records():
+
     # Вывод лучшего результата
-    best_player = player_name
-    record = f"Best balance: {best_player} {best_balance}"
+    #best_player = player_name
+    #record = f"Best balance: {best_player} {best_balance}"
+    record = best_balance
     filename = 'record.json'
     with open(filename, 'w') as f:
         json.dump(record, f)
-
 
 
 window = Tk()
@@ -268,6 +272,11 @@ window.title("21")
 window.geometry("370x330")
 
 init_name()
+
+
+lbl = Label(window, text=f"Best balance: {best_balance}")
+# lbl = Label(window, text=f"Best balance: {best_player} {best_balance}")
+lbl.grid(column=0, row=20)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", width=16, command=get_my_cards)
@@ -290,13 +299,6 @@ lbl.grid(column=2, row=1)
 # кнопка Play again - карты обнуляются, новая сдача
 btn_clear = Button(window, text="Play again", width=16, command=lambda: play(lbls))
 btn_clear.grid(column=2, row=3)
-
-filename = 'record.json'
-with open(filename) as f:
-    record = json.load(f)
-lbl = Label(window, text=record)
-# lbl = Label(window, text=f"Best balance: {best_player} {best_balance}")
-lbl.grid(column=0, row=20)
 
 # общий счет всей игры
 show_total_score()
