@@ -19,6 +19,16 @@ balance = 0
 filename = 'record.json'
 with open(filename) as f:
     best_balance = json.load(f)
+
+# имя игрока с лучшим результатом
+#best_player = "Abo"
+#filename = 'best_player.json'
+#with open(filename, 'w') as f:
+#    json.dump(best_player, f)
+
+filename = 'best_player.json'
+with open (filename) as f:
+    best_player = json.load(f)
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
@@ -28,8 +38,6 @@ lbls = []
 increase_points = 1
 # имя игрока
 player_name = ""
-# имя игрока с лучшим результатом
-best_player = ""
 
 
 def deal():
@@ -199,6 +207,7 @@ def get_pc_cards(my_points):
 
 def show_total_score():
     global best_balance
+    global best_player
     # общий счет - мои очки
     my_total = Label(window, text=my_total_points, font=15)
     my_total.place(x=10, y=80, width=140, height=30)
@@ -213,6 +222,7 @@ def show_total_score():
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
         best_balance = balance
+        best_player = player_name
         show_best_records()
 
 
@@ -246,6 +256,7 @@ def init_name():
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
     global player_name
+    global best_player
     # инициализация имени игрока
     player_name = name_entry.get()
     # убираю с экрана все поля, связанные с вводом имени игрока
@@ -264,19 +275,23 @@ def show_best_records():
     # Вывод лучшего результата
     #best_player = player_name
     #record = f"Best balance: {best_player} {best_balance}"
-    record = best_balance
+    #record = best_balance
     filename = 'record.json'
     with open(filename, 'w') as f:
-        json.dump(record, f)
+        json.dump(best_balance, f)
+
+    filename = 'best_player.json'
+    with open(filename, 'w') as f:
+        json.dump(best_player, f)
 
 
 window = Tk()
 window.title("21")
 window.geometry("480x480")
 
-lbl = Label(window, text=f"Best balance: {best_balance}", font=15)
+lbl = Label(window, text=f"Best balance: {best_player} - {best_balance}", font=15)
 # lbl = Label(window, text=f"Best balance: {best_player} {best_balance}")
-lbl.place(x=10, y=460, width=140, height=20)
+lbl.place(x=10, y=460)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", font=15, width=16, command=get_my_cards)
