@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/best_player.json" beforeDir="false" afterPath="$PROJECT_DIR$/best_player.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" afterPath="$PROJECT_DIR$/record.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +17,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4400">
-              <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
+            <state relative-caret-position="308">
+              <caret line="65" column="53" selection-start-line="65" selection-start-column="53" selection-end-line="65" selection-end-column="53" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -150,7 +149,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50073206" side_tool="true" weight="0.17610063" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49926794" visible="true" weight="0.2264151" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49926794" visible="true" weight="0.12264151" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -197,8 +196,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4400">
-          <caret line="200" lean-forward="true" selection-start-line="200" selection-end-line="200" />
+        <state relative-caret-position="308">
+          <caret line="65" column="53" selection-start-line="65" selection-start-column="53" selection-end-line="65" selection-end-column="53" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>

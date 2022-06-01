@@ -6,8 +6,8 @@ from random import randint
 import json
 
 # Масти и номиналы карт
-card_suits = ['Diamonds', 'Hearts', 'Clubs', 'Spades']
-card_values = ['Ace', 'King', 'Queen', 'Jack', '10', '9', '8', '7', '6', '5', '4', '3', '2']
+card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
+card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4', '3', '2']
 # розданные карты
 cards = []
 # Общий счет игры
@@ -47,7 +47,7 @@ def deal():
         random_suit = randint(0, 3)
         # случайный номинал карты
         random_value = randint(0, 12)
-        card = f"{card_values[random_value]} of {card_suits[random_suit]}"
+        card = f"{card_values[random_value]}_of_{card_suits[random_suit]}"
         # проверяю, если такая карта уже была выдана, то выдается заново
         if card in cards:
             cards.remove(card)
@@ -61,9 +61,9 @@ def count_points(value):
     # Определение кол-ва очков в зависимости от номинала карты по первой букве card
     points = 0
     for x in value:
-        if x[0] == 'A':
+        if x[0] == 'a':
             points += 11
-        elif x[0] == 'K' or x[0] == 'Q' or x[0] == 'J' or x[0] == '1':
+        elif x[0] == 'k' or x[0] == 'q' or x[0] == 'j' or x[0] == '1':
             points += 10
         else:
             points += int(x[0])
@@ -265,6 +265,10 @@ def best_records():
 window = Tk()
 window.title("21")
 window.geometry("460x460")
+window.resizable(0, 0)
+
+canvas = Canvas(window, width=460, height=460)
+canvas.pack()
 
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
 lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=15)
@@ -289,7 +293,8 @@ lbl = Label(window, text="balance", font=15)
 lbl.place(x=310, y=50, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
-btn_clear = Button(window, text="Play again", font=15, width=16, command=lambda: play(lbls))
+btn_clear = Button(window, text="Play again", font=15, width=16,
+                   command=lambda: play(lbls))
 btn_clear.place(x=310, y=110, width=140)
 
 # ввод имени игрока
