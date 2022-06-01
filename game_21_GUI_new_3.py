@@ -63,30 +63,10 @@ def count_points(value):
     for x in value:
         if x[0] == 'A':
             points += 11
-        if x[0] == 'K':
+        elif x[0] == 'K' or x[0] == 'Q' or x[0] == 'J' or x[0] == '1':
             points += 10
-        if x[0] == 'Q':
-            points += 10
-        if x[0] == 'J':
-            points += 10
-        if x[0] == '1':
-            points += 10
-        if x[0] == '9':
-            points += 9
-        if x[0] == '8':
-            points += 8
-        if x[0] == '7':
-            points += 7
-        if x[0] == '6':
-            points += 6
-        if x[0] == '5':
-            points += 5
-        if x[0] == '4':
-            points += 4
-        if x[0] == '3':
-            points += 3
-        if x[0] == '2':
-            points += 2
+        else:
+            points += int(x[0])
 
     return points
 
@@ -100,10 +80,11 @@ def get_my_cards():
     btn_clear.config(state='disabled')
     # вызываю функцию deal, чтобы выдать мне карту
     my_cards.append(deal())
-    # рассчитываем кол-во очков в зависмоати от выданной карты
+    # рассчитываем кол-во очков в зависмости от выданной карты
     my_points = count_points(my_cards)
     # если очков достаточно - нажимаем кнопку Enough
-    btn_enough = Button(window, text="Enough", font=15, width=16, command=lambda: get_pc_cards(my_points))
+    btn_enough = Button(window, text="Enough", font=15, width=16,
+                        command=lambda: get_pc_cards(my_points))
     btn_enough.place(x=160, y=110, width=140)
 
     for i in range(len(my_cards)):
@@ -144,8 +125,8 @@ def get_pc_cards(my_points):
     global balance
     # кнопка take отключена
     btn_take.config(state='disabled')
-    btn_enough = Button(window, text="Enough", font=15, width=16, command=get_pc_cards)
-    btn_enough.place(x=160, y=110, width=140)
+    #btn_enough = Button(window, text="Enough", font=15, width=16, command=get_pc_cards)
+    #btn_enough.place(x=160, y=110, width=140)
 
     # Определение карт компьютера
     while True:
@@ -188,7 +169,7 @@ def get_pc_cards(my_points):
                 # при равном кол-ве очков ставка увеличивается в 2 раза
                 increase_points *= 2
                 lbl = Label(window, text='Nobody win - double points next deal', font=15 )
-                lbl.place(x=80, y=420)
+                lbl.place(x=80, y=360)
                 btn_enough.config(state='disabled')
                 btn_clear.config(state='normal')
                 lbls.append(lbl)
@@ -216,14 +197,13 @@ def show_total_score():
     pc_total.place(x=160, y=80, width=140, height=30)
     # баланс - разница между очками игрока и PC
     total_balance = Label(window, text=balance, font=15)
-    total_balance.place(x=320, y=80, width=140, height=30)
-
+    total_balance.place(x=310, y=80, width=140, height=30)
 
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
         best_balance = balance
         best_player = player_name
-        show_best_records()
+        best_records()
 
 
 def play(lbls):
@@ -245,13 +225,14 @@ def init_name():
     lbl_name = Label(window, text="What is your name?", font=15)
     lbl_name.place(x=10, y=10, width=140, height=30)
     # окно ввода
-    name_entry = Entry(textvariable=player_name, width=20)
+    name_entry = Entry(textvariable=player_name, width=20, font=15)
     name_entry.place(x=160, y=10, width=140, height=30)
     # установка курсора в поле ввода
     name_entry.focus()
     # кнопка подтверждения имени -> функция активирует кнопку Take card
-    name_btn = Button(text="OK", font=15, width=16, command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
-    name_btn.place(x=320, y=10, width=140, height=30)
+    name_btn = Button(text="OK", font=15, width=16,
+                      command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
+    name_btn.place(x=310, y=10, width=140, height=30)
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
@@ -270,16 +251,12 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     btn_take.config(state='normal')
 
 
-def show_best_records():
-
-    # Вывод лучшего результата
-    #best_player = player_name
-    #record = f"Best balance: {best_player} {best_balance}"
-    #record = best_balance
+def best_records():
+    # запись в файл лучшего баланса
     filename = 'record.json'
     with open(filename, 'w') as f:
         json.dump(best_balance, f)
-
+    # запись в файл имя игрока с лучшим балансом
     filename = 'best_player.json'
     with open(filename, 'w') as f:
         json.dump(best_player, f)
@@ -287,11 +264,11 @@ def show_best_records():
 
 window = Tk()
 window.title("21")
-window.geometry("480x480")
+window.geometry("460x460")
 
-lbl = Label(window, text=f"Best balance: {best_player} - {best_balance}", font=15)
-# lbl = Label(window, text=f"Best balance: {best_player} {best_balance}")
-lbl.place(x=10, y=460)
+# показываю лучший баланс и имя лучшего игрока внизу игрового экрана
+lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=15)
+lbl.place(x=10, y=430)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", font=15, width=16, command=get_my_cards)
@@ -309,12 +286,13 @@ lbl.place(x=10, y=50, width=140, height=30)
 lbl = Label(window, text="pc total score", font=15)
 lbl.place(x=160, y=50, width=140, height=30)
 lbl = Label(window, text="balance", font=15)
-lbl.place(x=320, y=50, width=140, height=30)
+lbl.place(x=310, y=50, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
 btn_clear = Button(window, text="Play again", font=15, width=16, command=lambda: play(lbls))
-btn_clear.place(x=320, y=110, width=140)
+btn_clear.place(x=310, y=110, width=140)
 
+# ввод имени игрока
 init_name()
 # общий счет всей игры
 show_total_score()
