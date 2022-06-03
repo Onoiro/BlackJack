@@ -4,6 +4,7 @@
 from tkinter import*
 from random import randint
 import json
+#from PIL import Image, ImageTk
 
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
@@ -83,25 +84,31 @@ def get_my_cards():
     # рассчитываем кол-во очков в зависмости от выданной карты
     my_points = count_points(my_cards)
     # если очков достаточно - нажимаем кнопку Enough
-    btn_enough = Button(window, text="Enough", font=15, width=16,
+    btn_enough = Button(window, text="Enough", font=("Courier", 10), width=16,
                         command=lambda: get_pc_cards(my_points))
     btn_enough.place(x=160, y=110, width=140)
 
     for i in range(len(my_cards)):
         # вывожу на экран мои карты
-        lbl = Label(window, text=my_cards[i], font=15)
-        lbl.place(x=10, y=150 + i*30)
+        card_image = PhotoImage(file=f"images/{my_cards[i]}.gif")
+        lbl = Label(window)
+        lbl.image = card_image
+        lbl['image'] = lbl.image
+        lbl.place(x=10, y=150 + i*50)
+
+        #lbl = Label(window, text=my_cards[i], font=15)
+        #lbl.place(x=10, y=150 + i*30)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
         # вывожу на экран кол-во очков
-        lbl = Label(window, text=f"You got {my_points} points", font=15)
+        lbl = Label(window, text=f"You got {my_points} points", font=("Courier", 10))
         lbl.place(x=10, y=320)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
 
     if my_points > 21:
         # если кол-во очков больше 21 - проигрыш -перебор
-        lbl = Label(window, text=f"Too many. You loose", font=15)
+        lbl = Label(window, text=f"Too many. You loose", font=("Courier", 10))
         lbl.place(x=10, y=360)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
@@ -136,17 +143,23 @@ def get_pc_cards(my_points):
 
         for i in range(len(pc_cards)):
             # вывод на экран карт PC
-            lbl = Label(window, text=pc_cards[i], font=15)
-            lbl.place(x=160, y=150 + i*30)
+            card_image = PhotoImage(file=f"images/{pc_cards[i]}.gif")
+            lbl = Label(window)
+            lbl.image = card_image
+            lbl['image'] = lbl.image
+            lbl.place(x=160, y=150 + i * 50)
+
+            #lbl = Label(window, text=pc_cards[i], font=15)
+            #lbl.place(x=160, y=150 + i*30)
             # все надписи на экране добавляются в список
             lbls.append(lbl)
 
         if pc_points > 21:
             # если у PC перебор
-            lbl = Label(window, text=f"PC got {pc_points}.", font=15)
+            lbl = Label(window, text=f"PC got {pc_points}.", font=("Courier", 10))
             lbl.place(x=160, y=320)
             lbls.append(lbl)
-            lbl = Label(window, text="Too much",font=15 )
+            lbl = Label(window, text="Too much",font=("Courier", 10) )
             lbl.place(x=160, y=360)
             my_total_points += 1 * increase_points
             balance = my_total_points - pc_total_points
@@ -156,7 +169,7 @@ def get_pc_cards(my_points):
 
         elif pc_points >= 17:
             # если у pc очков более 17 - больше не набирает карты
-            lbl = Label(window, text=f"PC got {pc_points}.", font=15)
+            lbl = Label(window, text=f"PC got {pc_points}.", font=("Courier", 10))
             lbl.place(x=160, y=320)
             lbls.append(lbl)
             # определение победителя
@@ -168,7 +181,7 @@ def get_pc_cards(my_points):
             elif my_points == pc_points:
                 # при равном кол-ве очков ставка увеличивается в 2 раза
                 increase_points *= 2
-                lbl = Label(window, text='Nobody win - double points next deal', font=15 )
+                lbl = Label(window, text='Draw - no one won. Double the bet.', font=("Courier", 12) )
                 lbl.place(x=80, y=360)
                 btn_enough.config(state='disabled')
                 btn_clear.config(state='normal')
@@ -222,7 +235,7 @@ def play(lbls):
 def init_name():
     # инициализация игрока и ввод имени
     # запрос имени игрока
-    lbl_name = Label(window, text="What is your name?", font=15)
+    lbl_name = Label(window, text="Enter your name?", font=("Courier", 10))
     lbl_name.place(x=10, y=10, width=140, height=30)
     # окно ввода
     name_entry = Entry(textvariable=player_name, width=20, font=15)
@@ -230,7 +243,7 @@ def init_name():
     # установка курсора в поле ввода
     name_entry.focus()
     # кнопка подтверждения имени -> функция активирует кнопку Take card
-    name_btn = Button(text="OK", font=15, width=16,
+    name_btn = Button(text="OK", width=16, font=("Courier", 14),
                       command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
     name_btn.place(x=310, y=10, width=140, height=30)
 
@@ -245,7 +258,7 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     name_btn.destroy()
     name_entry.destroy()
     # вместо поля для ввода имени вывожу приветствие
-    lbl = Label(window, text=f"Good luck {player_name}!", font=15)
+    lbl = Label(window, text=f"Good luck {player_name}!", font=("Courier", 18))
     lbl.place(x=10, y=10)
     # кнопка Take card становится активной после ввода имени игрока
     btn_take.config(state='normal')
@@ -271,29 +284,29 @@ canvas = Canvas(window, width=460, height=460)
 canvas.pack()
 
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
-lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=15)
+lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=("Courier", 12))
 lbl.place(x=10, y=430)
 
 # кнопка Take card - взять еще карту игроку
-btn_take = Button(window, text="Take card", font=15, width=16, command=get_my_cards)
+btn_take = Button(window, text="Take card", font=("Courier", 10), width=16, command=get_my_cards)
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
 # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
-btn_enough = Button(window, text="Enough", font=15, width=16, command=get_pc_cards)
+btn_enough = Button(window, text="Enough", font=("Courier", 10), width=16, command=get_pc_cards)
 btn_enough.place(x=160, y=110, width=140)
 btn_enough.config(state='disabled')
 
 # вывод общего счета
-lbl = Label(window, text="your total score", font=15)
+lbl = Label(window, text="your total score", font=("Courier", 10))
 lbl.place(x=10, y=50, width=140, height=30)
-lbl = Label(window, text="pc total score", font=15)
+lbl = Label(window, text="pc total score", font=("Courier", 10))
 lbl.place(x=160, y=50, width=140, height=30)
-lbl = Label(window, text="balance", font=15)
+lbl = Label(window, text="balance", font=("Courier", 10))
 lbl.place(x=310, y=50, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
-btn_clear = Button(window, text="Play again", font=15, width=16,
+btn_clear = Button(window, text="Play again", font=("Courier", 10), width=16,
                    command=lambda: play(lbls))
 btn_clear.place(x=310, y=110, width=140)
 
