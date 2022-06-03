@@ -84,7 +84,7 @@ def get_my_cards():
     # рассчитываем кол-во очков в зависмости от выданной карты
     my_points = count_points(my_cards)
     # если очков достаточно - нажимаем кнопку Enough
-    btn_enough = Button(window, text="Enough", font=("Courier", 10), width=16,
+    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16,
                         command=lambda: get_pc_cards(my_points))
     btn_enough.place(x=160, y=110, width=140)
 
@@ -101,15 +101,15 @@ def get_my_cards():
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
         # вывожу на экран кол-во очков
-        lbl = Label(window, text=f"You got {my_points} points", font=("Courier", 10))
-        lbl.place(x=10, y=320)
+        lbl = Label(window, text=f"{my_points} points", font=("Courier", 12))
+        lbl.place(x=10, y=370)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
 
     if my_points > 21:
         # если кол-во очков больше 21 - проигрыш -перебор
-        lbl = Label(window, text=f"Too many. You loose", font=("Courier", 10))
-        lbl.place(x=10, y=360)
+        lbl = Label(window, text=f"Too many. You loose", font=("Courier", 12))
+        lbl.place(x=10, y=390)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
         # кнопки Take card и Enough не активны
@@ -156,11 +156,11 @@ def get_pc_cards(my_points):
 
         if pc_points > 21:
             # если у PC перебор
-            lbl = Label(window, text=f"PC got {pc_points}.", font=("Courier", 10))
-            lbl.place(x=160, y=320)
+            lbl = Label(window, text=f"{pc_points} points.", font=("Courier", 12))
+            lbl.place(x=160, y=370)
             lbls.append(lbl)
-            lbl = Label(window, text="Too much",font=("Courier", 10) )
-            lbl.place(x=160, y=360)
+            lbl = Label(window, text="Too much",font=("Courier", 12) )
+            lbl.place(x=160, y=390)
             my_total_points += 1 * increase_points
             balance = my_total_points - pc_total_points
             lbls.append(lbl)
@@ -169,8 +169,8 @@ def get_pc_cards(my_points):
 
         elif pc_points >= 17:
             # если у pc очков более 17 - больше не набирает карты
-            lbl = Label(window, text=f"PC got {pc_points}.", font=("Courier", 10))
-            lbl.place(x=160, y=320)
+            lbl = Label(window, text=f"{pc_points} points", font=("Courier", 12))
+            lbl.place(x=160, y=370)
             lbls.append(lbl)
             # определение победителя
             if my_points > pc_points:
@@ -182,7 +182,7 @@ def get_pc_cards(my_points):
                 # при равном кол-ве очков ставка увеличивается в 2 раза
                 increase_points *= 2
                 lbl = Label(window, text='Draw - no one won. Double the bet.', font=("Courier", 12) )
-                lbl.place(x=80, y=360)
+                lbl.place(x=80, y=390)
                 btn_enough.config(state='disabled')
                 btn_clear.config(state='normal')
                 lbls.append(lbl)
@@ -203,13 +203,13 @@ def show_total_score():
     global best_balance
     global best_player
     # общий счет - мои очки
-    my_total = Label(window, text=my_total_points, font=15)
+    my_total = Label(window, text=my_total_points, font=("Courier", 14))
     my_total.place(x=10, y=80, width=140, height=30)
     # общий счет - очки компьютера
-    pc_total = Label(window, text=pc_total_points, font=15)
+    pc_total = Label(window, text=pc_total_points, font=("Courier", 14))
     pc_total.place(x=160, y=80, width=140, height=30)
     # баланс - разница между очками игрока и PC
-    total_balance = Label(window, text=balance, font=15)
+    total_balance = Label(window, text=balance, font=("Courier", 14))
     total_balance.place(x=310, y=80, width=140, height=30)
 
     # определяю если текущий баланс лучще рекордного баланса
@@ -288,12 +288,12 @@ lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=("
 lbl.place(x=10, y=430)
 
 # кнопка Take card - взять еще карту игроку
-btn_take = Button(window, text="Take card", font=("Courier", 10), width=16, command=get_my_cards)
+btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
 # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
-btn_enough = Button(window, text="Enough", font=("Courier", 10), width=16, command=get_pc_cards)
+btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
 btn_enough.place(x=160, y=110, width=140)
 btn_enough.config(state='disabled')
 
@@ -306,7 +306,7 @@ lbl = Label(window, text="balance", font=("Courier", 10))
 lbl.place(x=310, y=50, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
-btn_clear = Button(window, text="Play again", font=("Courier", 10), width=16,
+btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
                    command=lambda: play(lbls))
 btn_clear.place(x=310, y=110, width=140)
 
