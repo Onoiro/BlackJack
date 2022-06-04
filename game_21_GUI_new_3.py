@@ -134,8 +134,6 @@ def get_pc_cards(my_points):
     global balance
     # кнопка take отключена
     btn_take.config(state='disabled')
-    btn_enough.config(state='disabled')
-
     # Определение карт компьютера
     while True:
         # карта PC
@@ -149,9 +147,6 @@ def get_pc_cards(my_points):
             lbl.image = card_image
             lbl['image'] = lbl.image
             lbl.place(x=190, y=230 + i * 50)
-
-            #lbl = Label(window, text=pc_cards[i], font=15)
-            #lbl.place(x=160, y=150 + i*30)
             # все надписи на экране добавляются в список
             lbls.append(lbl)
 
@@ -184,7 +179,6 @@ def get_pc_cards(my_points):
                 increase_points *= 2
                 lbl = Label(window, text='Draw - no one won. Double the bet.', font=("Courier", 12) )
                 lbl.place(x=30, y=190)
-                #btn_enough.config(state='disabled')
                 btn_clear.config(state='normal')
                 lbls.append(lbl)
                 show_total_score()
@@ -196,8 +190,8 @@ def get_pc_cards(my_points):
                 show_total_score()
             break
 
-    btn_enough.config(state='disabled')
     btn_clear.config(state='normal')
+    btn_take.config(state='disabled')
 
 
 def show_total_score():
@@ -213,7 +207,7 @@ def show_total_score():
     total_balance = Label(window, text=balance, font=("Courier", 14))
     total_balance.place(x=310, y=80, width=140, height=30)
 
-    btn_enough.config(state='disabled')
+    btn_enough_disabled()
 
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
@@ -288,9 +282,6 @@ window.title("21")
 window.geometry("460x560")
 window.resizable(0, 0)
 
-#canvas = Canvas(window, width=460, height=460)
-#canvas.pack()
-
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
 lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=("Courier", 12))
 lbl.place(x=10, y=530)
@@ -300,10 +291,11 @@ btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, comm
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
-# кнопка Enough - игроку больше не нужно карт, ход переходит к PC
-btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
-btn_enough.place(x=160, y=110, width=140)
-btn_enough.config(state='disabled')
+def btn_enough_disabled():
+    # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
+    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
+    btn_enough.place(x=160, y=110, width=140)
+    btn_enough.config(state='disabled')
 
 # вывод общего счета
 lbl = Label(window, text="your total score", font=("Courier", 10))
@@ -319,6 +311,8 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
+# кнопка Enough неактивна
+btn_enough_disabled()
 # ввод имени игрока
 init_name()
 # общий счет всей игры
