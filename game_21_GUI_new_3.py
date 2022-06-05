@@ -13,8 +13,8 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 # розданные карты
 cards = []
 # Общий счет игры
-my_total_points = 0
-pc_total_points = 0
+#my_total_points = 0
+#pc_total_points = 0
 # разница между my_total_points и pc_total_points
 balance = 5
 # лучший выигрыш в истории
@@ -41,6 +41,7 @@ lbls = []
 bet = 1
 # имя игрока
 player_name = ""
+blackjack = False
 
 
 def deal():
@@ -76,14 +77,20 @@ def count_points(value):
 
 def get_my_cards():
     # набор карт игрока
-    global pc_total_points
+    #global pc_total_points
     global balance
+    global blackjack
     # кнонка play again пока недоступна
     btn_clear.config(state='disabled')
     # вызываю функцию deal, чтобы выдать мне карту
     my_cards.append(deal())
     # рассчитываем кол-во очков в зависмости от выданной карты
     my_points = count_points(my_cards)
+    if my_points == 21 and len(my_cards) == 2:
+        blackjack = True
+        lbl = Label(window, text="Blackjack", font=("Courier", 12))
+        lbl.place(x=30, y=190)
+        lbls.append(lbl)
     # если очков достаточно - нажимаем кнопку Enough
     btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16,
                         command=lambda: get_pc_cards(my_points))
@@ -115,9 +122,9 @@ def get_my_cards():
         btn_take.config(state='disabled')
         btn_enough.config(state='disabled')
         # общий счет добавляется в пользу pc с учетом коэффицента
-        pc_total_points += 1 * bet
+        balance -= 1 * bet
         #balance = my_total_points - pc_total_points
-        get_new_balance()
+        #get_new_balance()
         # кнопка play_again снова активна
         btn_clear.config(state='normal')
         # переход в функцию, отображающую общий счет
@@ -126,10 +133,11 @@ def get_my_cards():
 
 def get_pc_cards(my_points):
     # набор карт компа
-    global my_total_points
-    global pc_total_points
+    #global my_total_points
+    #global pc_total_points
     global bet
     global balance
+    global blackjack
     # кнопка take отключена
     btn_take.config(state='disabled')
     # Определение карт компьютера
@@ -137,6 +145,9 @@ def get_pc_cards(my_points):
         # карта PC
         pc_cards.append(deal())
         pc_points = count_points(pc_cards)
+        if pc_points == 21 and len(pc_cards) == 2:
+            blackjack = True
+
 
         for i in range(len(pc_cards)):
             # вывод на экран карт PC
@@ -155,8 +166,8 @@ def get_pc_cards(my_points):
             lbls.append(lbl)
             lbl = Label(window, text="Too many",font=("Courier", 12) )
             lbl.place(x=180, y=190)
-            my_total_points += 1 * bet
-            get_new_balance()
+            balance += 1 * bet
+            #get_new_balance()
             lbls.append(lbl)
             show_total_score()
             break
@@ -168,11 +179,15 @@ def get_pc_cards(my_points):
             lbls.append(lbl)
             # определение победителя
             if my_points > pc_points:
-                # к общему счету игрока прибавляется 1
-                my_total_points += 1 * bet
-                #balance = my_total_points - pc_total_points
-                get_new_balance()
-                show_total_score()
+                if blackjack == True:
+                    balance += 2 * bet
+                    show_total_score()
+                    blackjack = False
+                else:
+                    # к общему счету игрока прибавляется 1
+                    balance += 1 * bet
+                    #get_new_balance()
+                    show_total_score()
             elif my_points == pc_points:
                 # при равном кол-ве очков ставка увеличивается в 2 раза
                 bet *= 2
@@ -189,19 +204,24 @@ def get_pc_cards(my_points):
                 return bet
 
             else:
-                pc_total_points += 1 * bet
-                get_new_balance()
-                show_total_score()
+                if pc_points == 21 and len(pc_cards) == 2:
+                    balance -= 2 * bet
+                    show_total_score()
+                else:
+                    balance -= 1 * bet
+                    #get_new_balance()
+                    show_total_score()
             break
 
     btn_clear.config(state='normal')
     btn_take.config(state='disabled')
 
-def get_new_balance():
+'''def get_new_balance():
     # подсчитываю баланс (сколько денег)
     global balance
+    #balance += bet
     balance = 5 + my_total_points - pc_total_points
-    return balance
+    return balance'''
 
 
 def show_total_score():
@@ -216,7 +236,7 @@ def show_total_score():
     # баланс - разница между очками игрока и PC (сколько денег сейчас)
     lbl = Label(window, text="your money", font=("Courier", 10))
     lbl.place(x=10, y=50, width=140, height=30)
-    total_balance = Label(window, text=f"{balance}$", font=("Courier", 14))
+    total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
     total_balance.place(x=10, y=80, width=140, height=30)
 
     # кнопка Enough становится неактивной
@@ -347,7 +367,7 @@ btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
 # подсчет нового баланса (сколько денег)
-get_new_balance()
+#get_new_balance()
 # кнопка Enough неактивна
 btn_enough_disabled()
 # ввод имени игрока
