@@ -5,7 +5,7 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
-#from PIL import Image, ImageTk
+
 
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
@@ -16,8 +16,8 @@ cards = []
 my_total_points = 0
 pc_total_points = 0
 # разница между my_total_points и pc_total_points
-balance = 0
-# лучшая разница в истории
+balance = 5
+# лучший выигрыш в истории
 filename = 'record.json'
 with open(filename) as f:
     best_balance = json.load(f)
@@ -28,6 +28,7 @@ with open(filename) as f:
 #with open(filename, 'w') as f:
 #    json.dump(best_player, f)
 
+# имя игрока с лучшим выигрышем
 filename = 'best_player.json'
 with open (filename) as f:
     best_player = json.load(f)
@@ -36,8 +37,8 @@ my_cards = []
 pc_cards = []
 # выведенные на экран надписи
 lbls = []
-# коэффицент начисления очков за победу
-increase_points = 1
+# коэффицент начисления очков за победу - ставка (bet)
+bet = 1
 # имя игрока
 player_name = ""
 
@@ -77,7 +78,6 @@ def get_my_cards():
     # набор карт игрока
     global pc_total_points
     global balance
-
     # кнонка play again пока недоступна
     btn_clear.config(state='disabled')
     # вызываю функцию deal, чтобы выдать мне карту
@@ -97,9 +97,6 @@ def get_my_cards():
         lbl.image = card_image
         lbl['image'] = lbl.image
         lbl.place(x=40, y=230 + i*50)
-
-        #lbl = Label(window, text=my_cards[i], font=15)
-        #lbl.place(x=10, y=150 + i*30)
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
         # вывожу на экран кол-во очков
@@ -118,8 +115,9 @@ def get_my_cards():
         btn_take.config(state='disabled')
         btn_enough.config(state='disabled')
         # общий счет добавляется в пользу pc с учетом коэффицента
-        pc_total_points += 1 * increase_points
-        balance = my_total_points - pc_total_points
+        pc_total_points += 1 * bet
+        #balance = my_total_points - pc_total_points
+        get_new_balance()
         # кнопка play_again снова активна
         btn_clear.config(state='normal')
         # переход в функцию, отображающую общий счет
@@ -130,7 +128,7 @@ def get_pc_cards(my_points):
     # набор карт компа
     global my_total_points
     global pc_total_points
-    global increase_points
+    global bet
     global balance
     # кнопка take отключена
     btn_take.config(state='disabled')
@@ -157,8 +155,8 @@ def get_pc_cards(my_points):
             lbls.append(lbl)
             lbl = Label(window, text="Too many",font=("Courier", 12) )
             lbl.place(x=180, y=190)
-            my_total_points += 1 * increase_points
-            balance = my_total_points - pc_total_points
+            my_total_points += 1 * bet
+            get_new_balance()
             lbls.append(lbl)
             show_total_score()
             break
@@ -171,43 +169,62 @@ def get_pc_cards(my_points):
             # определение победителя
             if my_points > pc_points:
                 # к общему счету игрока прибавляется 1
-                my_total_points += 1 * increase_points
-                balance = my_total_points - pc_total_points
+                my_total_points += 1 * bet
+                #balance = my_total_points - pc_total_points
+                get_new_balance()
                 show_total_score()
             elif my_points == pc_points:
                 # при равном кол-ве очков ставка увеличивается в 2 раза
-                increase_points *= 2
+                bet *= 2
                 lbl = Label(window, text='Draw - no one won. Double the bet.', font=("Courier", 12) )
                 lbl.place(x=30, y=190)
+                # вывод ставки на экран
+                show_bet()
+                # кнопка Play again активна
                 btn_clear.config(state='normal')
+                # собираю все lbl
                 lbls.append(lbl)
+                # вывожу ткущий счет на экран
                 show_total_score()
-                return increase_points
+                return bet
 
             else:
-                pc_total_points += 1 * increase_points
-                balance = my_total_points - pc_total_points
+                pc_total_points += 1 * bet
+                get_new_balance()
                 show_total_score()
             break
 
     btn_clear.config(state='normal')
     btn_take.config(state='disabled')
 
+def get_new_balance():
+    # подсчитываю баланс (сколько денег)
+    global balance
+    balance = 5 + my_total_points - pc_total_points
+    return balance
+
 
 def show_total_score():
     global best_balance
     global best_player
     # общий счет - мои очки
-    my_total = Label(window, text=my_total_points, font=("Courier", 14))
+    '''my_total = Label(window, text=my_total_points, font=("Courier", 14))
     my_total.place(x=10, y=80, width=140, height=30)
     # общий счет - очки компьютера
     pc_total = Label(window, text=pc_total_points, font=("Courier", 14))
-    pc_total.place(x=160, y=80, width=140, height=30)
-    # баланс - разница между очками игрока и PC
-    total_balance = Label(window, text=balance, font=("Courier", 14))
-    total_balance.place(x=310, y=80, width=140, height=30)
+    pc_total.place(x=160, y=80, width=140, height=30)'''
+    # баланс - разница между очками игрока и PC (сколько денег сейчас)
+    lbl = Label(window, text="your money", font=("Courier", 10))
+    lbl.place(x=10, y=50, width=140, height=30)
+    total_balance = Label(window, text=f"{balance}$", font=("Courier", 14))
+    total_balance.place(x=10, y=80, width=140, height=30)
 
+    # кнопка Enough становится неактивной
     btn_enough_disabled()
+
+    # если денег 0$ или меньше - конец игры
+    if balance <= 0:
+        game_over()
 
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
@@ -235,7 +252,7 @@ def init_name():
     lbl_name = Label(window, text="Who are you?", font=("Courier", 14))
     lbl_name.place(x=10, y=10, width=140, height=30)
     # окно ввода
-    name_entry = Entry(textvariable=player_name, width=20, font=15)
+    name_entry = Entry(textvariable=player_name, width=20, font=("Courier", 14))
     name_entry.place(x=160, y=10, width=140, height=30)
     # установка курсора в поле ввода
     name_entry.focus()
@@ -271,19 +288,39 @@ def best_records():
     with open(filename, 'w') as f:
         json.dump(best_player, f)
 
+def btn_enough_disabled():
+    # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
+    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
+    btn_enough.place(x=160, y=110, width=140)
+    btn_enough.config(state='disabled')
+
+def show_bet():
+    lbl = Label(window, text=f"{bet}", font=("Courier", 14))
+    lbl.place(x=160, y=80, width=140, height=30)
+
+def game_over():
+    play(lbls)
+    btn_take.config(state='disabled')
+    btn_clear.config(state='disabled')
+    lbl = Label(window, text="You don't have any more money", font=("Courier", 11))
+    lbl.place(x=90, y=240)
+    lbl = Label(window, text="GAME OVER", font=("Courier", 40))
+    lbl.place(x=80, y=280)
+
 def close():
+    # вывод окна с запросом выхода из игры
     if messagebox.askokcancel("Exit", "Do you want to quit?"):
         window.destroy()
 
 
 window = Tk()
 window.protocol("WM_DELETE_WINDOW", close)
-window.title("21")
+window.title("Welcome to Oriono's Blackjack game!")
 window.geometry("460x560")
 window.resizable(0, 0)
 
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
-lbl = Label(window, text=f"Best balance: {best_player}  {best_balance}", font=("Courier", 12))
+lbl = Label(window, text=f"Biggest gain: {best_player} {best_balance}$", font=("Courier", 12))
 lbl.place(x=10, y=530)
 
 # кнопка Take card - взять еще карту игроку
@@ -291,19 +328,17 @@ btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, comm
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
-def btn_enough_disabled():
-    # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
-    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
-    btn_enough.place(x=160, y=110, width=140)
-    btn_enough.config(state='disabled')
-
 # вывод общего счета
-lbl = Label(window, text="your total score", font=("Courier", 10))
-lbl.place(x=10, y=50, width=140, height=30)
-lbl = Label(window, text="pc total score", font=("Courier", 10))
+#lbl = Label(window, text="your total score", font=("Courier", 10))
+#lbl.place(x=10, y=50, width=140, height=30)
+#lbl = Label(window, text="pc total score", font=("Courier", 10))
+#lbl.place(x=160, y=50, width=140, height=30)
+
+# показываю текущую ставку
+lbl = Label(window, text="bet", font=("Courier", 10))
 lbl.place(x=160, y=50, width=140, height=30)
-lbl = Label(window, text="balance", font=("Courier", 10))
-lbl.place(x=310, y=50, width=140, height=30)
+lbl = Label(window, text=f"{bet}", font=("Courier", 14))
+lbl.place(x=160, y=80, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
 btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
@@ -311,6 +346,8 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
+# подсчет нового баланса (сколько денег)
+get_new_balance()
 # кнопка Enough неактивна
 btn_enough_disabled()
 # ввод имени игрока

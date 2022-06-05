@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/best_player.json" beforeDir="false" afterPath="$PROJECT_DIR$/best_player.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" afterPath="$PROJECT_DIR$/record.json" afterDir="false" />
@@ -19,8 +18,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="863">
-              <caret line="313" column="25" selection-start-line="313" selection-start-column="25" selection-end-line="313" selection-end-column="25" />
+            <state relative-caret-position="203">
+              <caret line="312" column="24" lean-forward="true" selection-start-line="312" selection-start-column="24" selection-end-line="312" selection-end-column="24" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -155,7 +154,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39937106" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.2971698" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14934114" />
@@ -282,8 +281,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="863">
-          <caret line="313" column="25" selection-start-line="313" selection-start-column="25" selection-end-line="313" selection-end-column="25" />
+        <state relative-caret-position="203">
+          <caret line="312" column="24" lean-forward="true" selection-start-line="312" selection-start-column="24" selection-end-line="312" selection-end-column="24" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>
