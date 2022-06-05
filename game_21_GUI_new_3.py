@@ -205,6 +205,9 @@ def get_pc_cards(my_points):
 
             else:
                 if pc_points == 21 and len(pc_cards) == 2:
+                    lbl = Label(window, text="Blackjack", font=("Courier", 12))
+                    lbl.place(x=180, y=190)
+                    lbls.append(lbl)
                     balance -= 2 * bet
                     show_total_score()
                 else:
