@@ -66,7 +66,10 @@ def count_points(value):
     points = 0
     for x in value:
         if x[0] == 'a':
-            points += 11
+            if (points + 11) > 21:
+                points += 1
+            else:
+                points += 11
         elif x[0] == 'k' or x[0] == 'q' or x[0] == 'j' or x[0] == '1':
             points += 10
         else:
@@ -164,12 +167,19 @@ def get_pc_cards(my_points):
             lbl = Label(window, text=f"{pc_points} points", font=("Courier", 12))
             lbl.place(x=180, y=160)
             lbls.append(lbl)
-            lbl = Label(window, text="Too many",font=("Courier", 12) )
+            lbl = Label(window, text="Too many", font=("Courier", 12))
             lbl.place(x=180, y=190)
-            balance += 1 * bet
-            #get_new_balance()
             lbls.append(lbl)
-            show_total_score()
+            if blackjack == True:
+                balance += 2 * bet
+                show_total_score()
+                blackjack = False
+            else:
+                # к общему счету игрока прибавляется 1
+                balance += 1 * bet
+                # get_new_balance()
+                show_total_score()
+
             break
 
         elif pc_points >= 17:
@@ -209,7 +219,9 @@ def get_pc_cards(my_points):
                     lbl.place(x=180, y=190)
                     lbls.append(lbl)
                     balance -= 2 * bet
+                    blackjack = False
                     show_total_score()
+
                 else:
                     balance -= 1 * bet
                     #get_new_balance()
