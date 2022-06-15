@@ -16,7 +16,7 @@ cards = []
 #my_total_points = 0
 #pc_total_points = 0
 # разница между my_total_points и pc_total_points
-balance = 2
+balance = 100
 # лучший выигрыш в истории
 filename = 'record.json'
 with open(filename) as f:
@@ -39,6 +39,8 @@ pc_cards = []
 lbls = []
 # коэффицент начисления очков за победу - ставка (bet)
 bet = 1
+# выигрыш за одну раздачу
+gain = 0
 # имя игрока
 player_name = ""
 blackjack = False
@@ -89,6 +91,7 @@ def get_my_cards():
     # набор карт игрока
     # global pc_total_points
     global balance
+    global gain
     global blackjack
     global five_cards
     global six_cards
@@ -148,6 +151,7 @@ def get_my_cards():
         btn_take.config(state='disabled')
         btn_enough.config(state='disabled')
         # общий счет добавляется в пользу pc с учетом коэффицента
+        gain = -1 * bet
         balance -= 1 * bet
         # кнопка play_again снова активна
         btn_clear.config(state='normal')
@@ -158,6 +162,7 @@ def get_my_cards():
 def get_pc_cards(my_points):
     # набор карт компа и расчет очков в зависимости от всех карт
     global bet
+    global gain
     global balance
     global blackjack
     global five_cards
@@ -190,16 +195,20 @@ def get_pc_cards(my_points):
             lbls.append(lbl)
             # расчет выигрыша игрока в зависимости от расклада карт (BlackJack и др.)
             if blackjack == True:
+                gain = 2 * bet
                 balance += 2 * bet
                 show_total_score()
             elif five_cards == True:
+                gain = 2 * bet
                 balance += 2 * bet
                 show_total_score()
             elif six_cards == True:
+                gain = 3 * bet
                 balance += 3 * bet
                 show_total_score()
             else:
                 # к общему счету игрока прибавляется 1
+                gain = 1 * bet
                 balance += 1 * bet
                 show_total_score()
             break
@@ -213,20 +222,25 @@ def get_pc_cards(my_points):
             # и расчет выигрыша игрока в зависимости от расклада
             if my_points > pc_points:
                 if blackjack == True:
+                    gain = 2 * bet
                     balance += 2 * bet
                     show_total_score()
                 elif five_cards == True:
+                    gain = 2 * bet
                     balance += 2 * bet
                     show_total_score()
                 elif six_cards == True:
+                    gain = 3 * bet
                     balance += 3 * bet
                     show_total_score()
                 else:
                     # к общему счету игрока прибавляется 1
+                    gain = 1 * bet
                     balance += 1 * bet
                     show_total_score()
             elif my_points == pc_points:
                 # при равном кол-ве очков ставка увеличивается в 2 раза
+                gain = 0
                 bet *= 2
                 lbl = Label(window, text='No one won. Double the bet.', font=("Courier", 12) )
                 lbl.place(x=30, y=190)
@@ -247,21 +261,25 @@ def get_pc_cards(my_points):
                     lbl = Label(window, text="Blackjack", font=("Courier", 12))
                     lbl.place(x=180, y=190)
                     lbls.append(lbl)
+                    gain = -2 * bet
                     balance -= 2 * bet
                     show_total_score()
                 elif len(pc_cards) == 5 and pc_points <= 21:
                     lbl = Label(window, text="5 cards", font=("Courier", 12))
                     lbl.place(x=180, y=190)
                     lbls.append(lbl)
+                    gain = -2 * bet
                     balance -= 2 * bet
                     show_total_score()
                 elif len(pc_cards) >= 6 and pc_points <= 21:
                     lbl = Label(window, text="6 cards", font=("Courier", 12))
                     lbl.place(x=180, y=190)
                     lbls.append(lbl)
+                    gain = -3 * bet
                     balance -= 3 * bet
                     show_total_score()
                 else:
+                    gain = -1 * bet
                     balance -= 1 * bet
                     show_total_score()
             break
@@ -274,6 +292,7 @@ def show_total_score():
     # вывод баланса игрока
 
     global best_balance
+    global gain
     global best_player
     global blackjack
     global five_cards
@@ -288,6 +307,12 @@ def show_total_score():
     lbl.place(x=10, y=50, width=140, height=30)
     total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
     total_balance.place(x=10, y=80, width=140, height=30)
+
+    # показываю выигрыш на прошлой раздаче
+    lbl = Label(window, text="gain", font=("Courier", 10))
+    lbl.place(x=160, y=50, width=140, height=30)
+    lbl = Label(window, text=f"{gain}$", font=("Courier", 14))
+    lbl.place(x=160, y=80, width=140, height=30)
 
     # кнопка Enough становится неактивной
     btn_enough_disabled()
