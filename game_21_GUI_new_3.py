@@ -5,6 +5,7 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
+from datetime import datetime
 
 
 # Масти и номиналы карт
@@ -416,6 +417,11 @@ def close():
         window.destroy()
 
 
+def update_time():
+    time_lbl.config(text=f"{datetime.now():%Y/%m/%d %H:%M:%S:%f}")
+    window.after(1, update_time)
+
+
 window = Tk()
 window.protocol("WM_DELETE_WINDOW", close)
 window.title("Welcome to Oriono's Blackjack game!")
@@ -423,8 +429,12 @@ window.geometry("460x560")
 window.resizable(0, 0)
 
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
-lbl = Label(window, text=f"Biggest gain: {best_player} {best_balance}$", font=("Courier", 12))
+lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("Courier", 12))
 lbl.place(x=10, y=530)
+
+# показываю текущее время
+time_lbl = Label(window, font=("Courier", 10))
+time_lbl.place(x=240, y=18)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
@@ -443,6 +453,8 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
+# вызов функции обновляющей текущее время
+update_time()
 # кнопка Enough неактивна
 btn_enough_disabled()
 # ввод имени игрока
