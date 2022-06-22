@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/best_player.json" beforeDir="false" afterPath="$PROJECT_DIR$/best_player.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" afterPath="$PROJECT_DIR$/record.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +17,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="421" column="20" selection-start-line="421" selection-start-column="20" selection-end-line="421" selection-end-column="20" />
+            <state relative-caret-position="332">
+              <caret line="376" column="17" selection-start-line="376" selection-start-column="17" selection-end-line="376" selection-end-column="17" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -50,8 +49,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="57" />
-    <option name="y" value="36" />
+    <option name="x" value="-7" />
+    <option name="y" value="26" />
     <option name="width" value="1346" />
     <option name="height" value="688" />
   </component>
@@ -288,8 +287,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="421" column="20" selection-start-line="421" selection-start-column="20" selection-end-line="421" selection-end-column="20" />
+        <state relative-caret-position="332">
+          <caret line="376" column="17" selection-start-line="376" selection-start-column="17" selection-end-line="376" selection-end-column="17" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>

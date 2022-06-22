@@ -5,7 +5,7 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
-from datetime import datetime
+from datetime import datetime, time
 
 
 # Масти и номиналы карт
@@ -373,6 +373,8 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     lbl.place(x=10, y=10)
     # кнопка Take card становится активной после ввода имени игрока
     btn_take.config(state='normal')
+    # вызов функции обновляющей текущее время
+    update_time()
 
 
 def best_records():
@@ -418,13 +420,14 @@ def close():
 
 
 def update_time():
-    time_lbl.config(text=f"{datetime.now():%Y/%m/%d %H:%M:%S:%f}")
-    window.after(1, update_time)
+    #date_lbl.config(text=f"{datetime.now():%d.%m.%Y}")
+    time_lbl.config(text=f"{datetime.now():%H:%M:%S:%f}")
+    window.after(100, update_time)
 
 
 window = Tk()
 window.protocol("WM_DELETE_WINDOW", close)
-window.title("Welcome to Oriono's Blackjack game!")
+window.title(f"Welcome to Oriono's Blackjack game! Now is {datetime.now():%d.%m.%Y}")
 window.geometry("460x560")
 window.resizable(0, 0)
 
@@ -433,8 +436,8 @@ lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("C
 lbl.place(x=10, y=530)
 
 # показываю текущее время
-time_lbl = Label(window, font=("Courier", 10))
-time_lbl.place(x=240, y=18)
+time_lbl = Label(window, font=("Courier", 16))
+time_lbl.place(x=300, y=14)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
@@ -453,8 +456,7 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
-# вызов функции обновляющей текущее время
-update_time()
+
 # кнопка Enough неактивна
 btn_enough_disabled()
 # ввод имени игрока
