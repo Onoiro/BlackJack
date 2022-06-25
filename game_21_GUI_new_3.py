@@ -5,7 +5,8 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
-from datetime import datetime, time
+from datetime import datetime, timedelta
+import time
 
 
 # Масти и номиналы карт
@@ -17,7 +18,7 @@ cards = []
 #my_total_points = 0
 #pc_total_points = 0
 # разница между my_total_points и pc_total_points
-balance = 100
+balance = 1
 # лучший выигрыш в истории
 filename = 'record.json'
 with open(filename) as f:
@@ -47,6 +48,8 @@ player_name = ""
 blackjack = False
 five_cards = False
 six_cards = False
+game_time = timedelta(minutes=0, seconds=0, milliseconds=0)
+game_active = True
 
 
 def deal():
@@ -204,8 +207,8 @@ def get_pc_cards(my_points):
                 balance += 2 * bet
                 show_total_score()
             elif six_cards == True:
-                gain = 3 * bet
-                balance += 3 * bet
+                gain = 4 * bet
+                balance += 4 * bet
                 show_total_score()
             else:
                 # к общему счету игрока прибавляется 1
@@ -231,8 +234,8 @@ def get_pc_cards(my_points):
                     balance += 2 * bet
                     show_total_score()
                 elif six_cards == True:
-                    gain = 3 * bet
-                    balance += 3 * bet
+                    gain = 4 * bet
+                    balance += 4 * bet
                     show_total_score()
                 else:
                     # к общему счету игрока прибавляется 1
@@ -362,6 +365,7 @@ def init_name():
 def btn_take_normal(lbl_name, name_btn, name_entry):
     global player_name
     global best_player
+    global start_time
     # инициализация имени игрока
     player_name = name_entry.get()
     # убираю с экрана все поля, связанные с вводом имени игрока
@@ -403,7 +407,10 @@ def show_bet():
 
 def game_over():
     # конец игры, когда у игрока заканчиваются деньги
+    global game_active
     play(lbls)
+    game_active = False
+
     btn_take.config(state='disabled')
     btn_clear.config(state='disabled')
 
@@ -412,22 +419,31 @@ def game_over():
     lbl = Label(window, text="GAME OVER", font=("Courier", 40))
     lbl.place(x=80, y=280)
 
-
 def close():
     # вывод окна с запросом выхода из игры
     if messagebox.askokcancel("Exit", "Do you want to quit?"):
         window.destroy()
 
-
 def update_time():
-    #date_lbl.config(text=f"{datetime.now():%d.%m.%Y}")
-    time_lbl.config(text=f"{datetime.now():%H:%M:%S:%f}")
-    window.after(100, update_time)
+    global game_time
+    global game_active
+    if game_active is True:
+        game_time += timedelta(seconds=1)
+        time_lbl_sec.config(text=f"{game_time}")
+        window.after(1000, update_time)
+    else:
+        time_lbl_sec.config(text=f"{game_time}")
+        window.after(1000, update_time)
+
+def update_global_time():
+    time_lbl.config(text=f"{datetime.now():%H:%M:%S}")
+    window.after(10, update_global_time)
 
 
 window = Tk()
 window.protocol("WM_DELETE_WINDOW", close)
-window.title(f"Welcome to Oriono's Blackjack game! Now is {datetime.now():%d.%m.%Y}")
+window.title(f"Welcome to Oriono's Blackjack! Now is {datetime.now():%d}"
+             f" of {datetime.now():%B} {datetime.now():%Y}")
 window.geometry("460x560")
 window.resizable(0, 0)
 
@@ -436,8 +452,11 @@ lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("C
 lbl.place(x=10, y=530)
 
 # показываю текущее время
-time_lbl = Label(window, font=("Courier", 16))
-time_lbl.place(x=300, y=14)
+time_lbl = Label(window, font=("Courier", 12))
+time_lbl.place(x=360, y=530)
+# показываю время игры
+time_lbl_sec = Label(window, font=("Courier", 12))
+time_lbl_sec.place(x=360, y=15)
 
 # кнопка Take card - взять еще карту игроку
 btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
@@ -456,7 +475,8 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
-
+# текущее время
+update_global_time()
 # кнопка Enough неактивна
 btn_enough_disabled()
 # ввод имени игрока
