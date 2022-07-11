@@ -14,7 +14,7 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 # розданные карты
 cards = []
 # разница между my_total_points и pc_total_points
-balance = 100
+balance = 1
 # лучший выигрыш в истории
 filename = 'record.json'
 with open(filename) as f:
@@ -65,8 +65,6 @@ def init_name():
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
-    global player_name
-    global best_player
     # инициализация имени игрока
     player_name = name_entry.get()
     # убираю с экрана все поля, связанные с вводом имени игрока
@@ -123,7 +121,6 @@ def count_points(value):
 
 def get_my_cards():
     # набор карт игрока
-    # global pc_total_points
     global balance
     global gain
     global blackjack
@@ -196,9 +193,6 @@ def get_my_cards():
 def get_pc_cards(my_points):
     # набор карт компа и расчет очков в зависимости от всех карт
     pc_points = 0
-    global blackjack
-    global five_cards
-    global six_cards
     # кнопка take отключена
     btn_take.config(state='disabled')
     # Определение карт компьютера
@@ -224,6 +218,9 @@ def get_winner(my_points, pc_points):
     global bet
     global gain
     global balance
+    global blackjack
+    global five_cards
+    global six_cards
 
     lbl = Label(window, text=f"{pc_points} points", font=("Courier", 12))
     lbl.place(x=180, y=160)
@@ -248,7 +245,6 @@ def get_winner(my_points, pc_points):
             # к общему счету игрока прибавляется 1
             gain = 1 * bet
             balance += 1 * bet
-        show_total_score()
 
     elif pc_points >= 17:
         # определение победителя
@@ -267,7 +263,7 @@ def get_winner(my_points, pc_points):
                 # к общему счету игрока прибавляется 1
                 gain = 1 * bet
                 balance += 1 * bet
-            show_total_score()
+
         elif my_points == pc_points:
             # при равном кол-ве очков ставка увеличивается в 2 раза
             gain = 0
@@ -280,8 +276,7 @@ def get_winner(my_points, pc_points):
             btn_clear.config(state='normal')
             # собираю все lbl
             lbls.append(lbl)
-            # вывожу ткущий счет на экран
-            show_total_score()
+
             return bet
 
         else:
@@ -309,7 +304,7 @@ def get_winner(my_points, pc_points):
                 gain = -1 * bet
                 balance -= 1 * bet
 
-            show_total_score()
+    show_total_score()
 
     btn_clear.config(state='normal')
     btn_take.config(state='disabled')
@@ -385,6 +380,15 @@ def btn_enough_disabled():
     btn_enough.place(x=160, y=110, width=140)
     btn_enough.config(state='disabled')
 
+def btn_take_disabled():
+    btn_take.config(state='disabled')
+
+def btn_clear_disabled():
+    btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
+                       command=lambda: play_again(lbls))
+    btn_clear.place(x=310, y=110, width=140)
+    btn_clear.config(state='disabled')
+
 
 def show_bet():
     # вывод на экран текущей ставки
@@ -395,21 +399,17 @@ def show_bet():
 def game_over():
     # конец игры, когда у игрока заканчиваются деньги
     global game_active
-    play_again(lbls)
-    game_active = False
 
-    btn_take.config(state='disabled')
-    btn_clear.config(state='disabled')
+    game_active = False
 
     lbl = Label(window, text="You don't have any more money", font=("Courier", 11))
     lbl.place(x=90, y=240)
     lbl = Label(window, text="GAME OVER", font=("Courier", 40))
     lbl.place(x=80, y=280)
 
-def close():
-    # вывод окна с запросом выхода из игры
-    if messagebox.askokcancel("Exit", "Do you want to quit?"):
-        window.destroy()
+    btn_clear_disabled()
+    btn_take_disabled()
+
 
 def update_time():
     global game_time
@@ -425,6 +425,13 @@ def update_time():
 def update_global_time():
     time_lbl.config(text=f"{datetime.now():%H:%M:%S}")
     window.after(10, update_global_time)
+
+
+def close():
+    # вывод окна с запросом выхода из игры
+    if messagebox.askokcancel("Exit", "Do you want to quit?"):
+        window.destroy()
+
 
 
 window = Tk()
