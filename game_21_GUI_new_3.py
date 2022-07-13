@@ -13,7 +13,7 @@ card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
 card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4', '3', '2']
 # розданные карты
 cards = []
-# разница между my_total_points и pc_total_points
+# сколько денег у игрока
 balance = 1
 # лучший выигрыш в истории
 filename = 'record.json'
@@ -33,10 +33,12 @@ with open (filename) as f:
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
-# выведенные на экран надписи
+# выведенные на экран надписи и картинки
 lbls = []
-# коэффицент начисления очков за победу - ставка (bet)
+# текущий коэффицент начисления очков за победу - ставка (bet)
 bet = 1
+# коэффициент увеличения очков в зависимости от набора карт
+ratio = 0
 # выигрыш за одну раздачу
 gain = 0
 # имя игрока
@@ -121,8 +123,7 @@ def count_points(value):
 
 def get_my_cards():
     # набор карт игрока
-    global balance
-    global gain
+    global ratio
     global blackjack
     global five_cards
     global six_cards
@@ -151,10 +152,6 @@ def get_my_cards():
         lbl = Label(window, text="6 cards", font=("Courier", 12))
         lbl.place(x=30, y=190)
         lbls.append(lbl)
-    # если очков достаточно - нажимаем кнопку Enough
-    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16,
-                        command=lambda: get_pc_cards(my_points))
-    btn_enough.place(x=160, y=110, width=140)
 
     for i in range(len(my_cards)):
         # вывожу на экран мои карты
@@ -172,6 +169,11 @@ def get_my_cards():
         # вывод на экран добавляется в список надписей
         lbls.append(lbl)
 
+    # если очков достаточно - нажимаем кнопку Enough
+    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16,
+                        command=lambda: get_pc_cards(my_points))
+    btn_enough.place(x=160, y=110, width=140)
+
     if my_points > 21:
         # если кол-во очков больше 21 - проигрыш -перебор
         lbl = Label(window, text=f"Too many", font=("Courier", 12))
@@ -182,8 +184,7 @@ def get_my_cards():
         btn_take.config(state='disabled')
         btn_enough.config(state='disabled')
         # общий счет добавляется в пользу pc с учетом коэффицента
-        gain = -1 * bet
-        balance -= 1 * bet
+        ratio = -1
         # кнопка play_again снова активна
         btn_clear.config(state='normal')
         # переход в функцию, отображающую общий счет
@@ -211,20 +212,21 @@ def get_pc_cards(my_points):
             # все надписи на экране добавляются в список
             lbls.append(lbl)
 
+        # вывод кол-ва очков pc на экран
+        lbl = Label(window, text=f"{pc_points} points", font=("Courier", 12))
+        lbl.place(x=180, y=160)
+        lbls.append(lbl)
+
         get_winner(my_points, pc_points)
 
 
 def get_winner(my_points, pc_points):
     global bet
     global gain
-    global balance
+    global ratio
     global blackjack
     global five_cards
     global six_cards
-
-    lbl = Label(window, text=f"{pc_points} points", font=("Courier", 12))
-    lbl.place(x=180, y=160)
-    lbls.append(lbl)
 
     if pc_points > 21:
         # если у PC перебор
@@ -233,36 +235,27 @@ def get_winner(my_points, pc_points):
         lbls.append(lbl)
         # расчет выигрыша игрока в зависимости от расклада карт (BlackJack и др.)
         if blackjack is True:
-            gain = 2 * bet
-            balance += 2 * bet
+            ratio = 2
         elif five_cards is True:
-            gain = 3 * bet
-            balance += 3 * bet
+            ratio = 3
         elif six_cards is True:
-            gain = 4 * bet
-            balance += 4 * bet
+            ratio = 4
         else:
             # к общему счету игрока прибавляется 1
-            gain = 1 * bet
-            balance += 1 * bet
+            ratio = 1
 
     elif pc_points >= 17:
         # определение победителя
         # и расчет выигрыша игрока в зависимости от расклада
         if my_points > pc_points:
             if blackjack is True:
-                gain = 2 * bet
-                balance += 2 * bet
+                ratio = 2
             elif five_cards is True:
-                gain = 3 * bet
-                balance += 3 * bet
+                ratio = 3
             elif six_cards is True:
-                gain = 4 * bet
-                balance += 4 * bet
+                ratio = 4
             else:
-                # к общему счету игрока прибавляется 1
-                gain = 1 * bet
-                balance += 1 * bet
+                ratio = 1
 
         elif my_points == pc_points:
             # при равном кол-ве очков ставка увеличивается в 2 раза
@@ -286,23 +279,19 @@ def get_winner(my_points, pc_points):
                 lbl = Label(window, text="Blackjack", font=("Courier", 12))
                 lbl.place(x=180, y=190)
                 lbls.append(lbl)
-                gain = -2 * bet
-                balance -= 2 * bet
+                ratio = -2
             elif len(pc_cards) == 5 and pc_points <= 21:
                 lbl = Label(window, text="5 cards", font=("Courier", 12))
                 lbl.place(x=180, y=190)
                 lbls.append(lbl)
-                gain = -3 * bet
-                balance -= 3 * bet
+                ratio = -3
             elif len(pc_cards) >= 6 and pc_points <= 21:
                 lbl = Label(window, text="6 cards", font=("Courier", 12))
                 lbl.place(x=180, y=190)
                 lbls.append(lbl)
-                gain = -4 * bet
-                balance -= 4 * bet
+                ratio = -4
             else:
-                gain = -1 * bet
-                balance -= 1 * bet
+                ratio = -1
 
     show_total_score()
 
@@ -312,28 +301,24 @@ def get_winner(my_points, pc_points):
 
 def show_total_score():
     # вывод баланса игрока
-
     global best_balance
     global gain
+    global ratio
     global best_player
     global blackjack
     global five_cards
     global six_cards
+
+    get_balance()
 
     lbl = Label(window, text="your money", font=("Courier", 10))
     lbl.place(x=10, y=50, width=140, height=30)
     total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
     total_balance.place(x=10, y=80, width=140, height=30)
 
-    # показываю выигрыш на прошлой раздаче
-    lbl = Label(window, text="last gain", font=("Courier", 10))
-    lbl.place(x=160, y=50, width=140, height=30)
-    lbl = Label(window, text=f"{gain}$", font=("Courier", 14))
-    lbl.place(x=160, y=80, width=140, height=30)
+    show_gain()
 
-    blackjack = False
-    five_cards = False
-    six_cards = False
+    ratio = 0
 
     # кнопка Enough становится неактивной
     btn_enough_disabled()
@@ -349,10 +334,20 @@ def show_total_score():
         best_records()
 
 
+def get_balance():
+    global balance
+    global gain
+    gain = ratio * bet
+    balance += gain
+
+
 def play_again(lbls):
     # новая раздача
     global my_cards
     global pc_cards
+    global blackjack
+    global five_cards
+    global six_cards
     # карты игрока и PC обнуляются
     my_cards = []
     pc_cards = []
@@ -361,6 +356,9 @@ def play_again(lbls):
         lbl.destroy()
     # кнопка Take card активна
     btn_take.config(state='normal')
+    blackjack = False
+    five_cards = False
+    six_cards = False
 
 
 def best_records():
@@ -380,8 +378,10 @@ def btn_enough_disabled():
     btn_enough.place(x=160, y=110, width=140)
     btn_enough.config(state='disabled')
 
+
 def btn_take_disabled():
     btn_take.config(state='disabled')
+
 
 def btn_clear_disabled():
     btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
@@ -394,6 +394,14 @@ def show_bet():
     # вывод на экран текущей ставки
     lbl = Label(window, text=f"{bet}", font=("Courier", 14))
     lbl.place(x=310, y=80, width=140, height=30)
+
+
+def show_gain():
+    # показываю выигрыш на прошлой раздаче
+    lbl = Label(window, text="last gain", font=("Courier", 10))
+    lbl.place(x=160, y=50, width=140, height=30)
+    lbl = Label(window, text=f"{gain}$", font=("Courier", 14))
+    lbl.place(x=160, y=80, width=140, height=30)
 
 
 def game_over():
@@ -421,6 +429,7 @@ def update_time():
     else:
         time_lbl_sec.config(text=f"{game_time}")
         window.after(1000, update_time)
+
 
 def update_global_time():
     time_lbl.config(text=f"{datetime.now():%H:%M:%S}")
