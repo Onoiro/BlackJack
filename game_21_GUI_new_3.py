@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
 card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4', '3', '2']
+
 # розданные карты
 cards = []
 # сколько денег у игрока
@@ -43,10 +44,13 @@ ratio = 0
 gain = 0
 # имя игрока
 player_name = ""
+# расклады, повышающие коэффициент увеличения очков
 blackjack = False
 five_cards = False
 six_cards = False
-game_time = timedelta(minutes=0, seconds=0, milliseconds=0)
+seven_3 = False
+
+game_time = timedelta(hours=0, minutes=0, seconds=0, milliseconds=0)
 game_active = True
 
 
@@ -127,6 +131,7 @@ def get_my_cards():
     global blackjack
     global five_cards
     global six_cards
+    global seven_3
     # кнонка play again пока недоступна
     btn_clear.config(state='disabled')
     # вызываю функцию deal, чтобы выдать мне карту
@@ -139,7 +144,7 @@ def get_my_cards():
         lbl = Label(window, text="Blackjack", font=("Courier", 12))
         lbl.place(x=30, y=190)
         lbls.append(lbl)
-    # если карт 5 и очков 21 или меньше - возможен выигрыш с двойной ставкой
+    # если карт 5 и очков 21 или меньше - возможен выигрыш с тройной ставкой
     if len(my_cards) == 5 and my_points <= 21:
         five_cards = True
         lbl = Label(window, text="5 cards", font=("Courier", 12))
@@ -152,6 +157,18 @@ def get_my_cards():
         lbl = Label(window, text="6 cards", font=("Courier", 12))
         lbl.place(x=30, y=190)
         lbls.append(lbl)
+
+    if len(my_cards) == 3:
+        count_7 = 0
+        for i in range(3):
+            for k in my_cards[i]:
+                if k[0] == '7':
+                    count_7 += 1
+        if count_7 == 3:
+            seven_3 = True
+            lbl = Label(window, text="777", font=("Courier", 12))
+            lbl.place(x=30, y=190)
+            lbls.append(lbl)
 
     for i in range(len(my_cards)):
         # вывожу на экран мои карты
@@ -227,6 +244,7 @@ def get_winner(my_points, pc_points):
     global blackjack
     global five_cards
     global six_cards
+    global seven_3
 
     if pc_points > 21:
         # если у PC перебор
@@ -240,6 +258,8 @@ def get_winner(my_points, pc_points):
             ratio = 3
         elif six_cards is True:
             ratio = 4
+        elif seven_3 is True:
+            ratio = 5
         else:
             # к общему счету игрока прибавляется 1
             ratio = 1
@@ -254,6 +274,8 @@ def get_winner(my_points, pc_points):
                 ratio = 3
             elif six_cards is True:
                 ratio = 4
+            elif seven_3 is True:
+                ratio = 5
             else:
                 ratio = 1
 
@@ -290,6 +312,20 @@ def get_winner(my_points, pc_points):
                 lbl.place(x=180, y=190)
                 lbls.append(lbl)
                 ratio = -4
+            elif len(pc_cards) == 3:
+                count_7 = 0
+                for i in range(3):
+                    for k in pc_cards[i]:
+                        if k[0] == '7':
+                            count_7 += 1
+                if count_7 == 3:
+                    lbl = Label(window, text="777", font=("Courier", 12))
+                    lbl.place(x=180, y=190)
+                    lbls.append(lbl)
+                    ratio = -5
+                else:
+                    ratio = -1
+
             else:
                 ratio = -1
 
@@ -302,7 +338,6 @@ def get_winner(my_points, pc_points):
 def show_total_score():
     # вывод баланса игрока
     global best_balance
-    global gain
     global ratio
     global best_player
     global blackjack
@@ -348,6 +383,7 @@ def play_again(lbls):
     global blackjack
     global five_cards
     global six_cards
+    global seven_3
     # карты игрока и PC обнуляются
     my_cards = []
     pc_cards = []
@@ -359,6 +395,7 @@ def play_again(lbls):
     blackjack = False
     five_cards = False
     six_cards = False
+    seven_3 = False
 
 
 def best_records():
