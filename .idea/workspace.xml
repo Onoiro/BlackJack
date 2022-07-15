@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,8 +17,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="326" column="30" selection-start-line="326" selection-start-column="30" selection-end-line="326" selection-end-column="30" />
+            <state relative-caret-position="8096">
+              <caret line="368" lean-forward="true" selection-start-line="368" selection-end-line="368" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -303,8 +304,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="326" column="30" selection-start-line="326" selection-start-column="30" selection-end-line="326" selection-end-column="30" />
+        <state relative-caret-position="8096">
+          <caret line="368" lean-forward="true" selection-start-line="368" selection-end-line="368" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>
