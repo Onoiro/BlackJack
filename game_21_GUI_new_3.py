@@ -199,7 +199,6 @@ def get_my_cards():
                     count_7 += 1
         if count_7 == 3:
             ratio = 5
-            #seven_3 = True
             lbl = Label(window, text="7 7 7", font=("Courier", 12))
             lbl.place(x=30, y=190)
             lbls.append(lbl)
