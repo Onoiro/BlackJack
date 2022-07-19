@@ -449,8 +449,11 @@ def update_global_time():
 
 
 def close():
+    global balance
+    global player_name
     # вывод окна с запросом выхода из игры
-    if messagebox.askokcancel("Exit", "Do you want to quit?"):
+    if messagebox.askokcancel("Exit", f"{player_name}, you have {balance}$\n"
+                                      f"Do you really want to quit?"):
         window.destroy()
 
 
