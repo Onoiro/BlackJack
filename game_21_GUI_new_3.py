@@ -452,8 +452,11 @@ def close():
     global balance
     global player_name
     # вывод окна с запросом выхода из игры
-    if messagebox.askokcancel("Exit", f"{player_name}, you have {balance}$\n"
-                                      f"Do you really want to quit?"):
+    if balance > 0:
+        if messagebox.askokcancel("Exit", f"{player_name}, you have {balance}$\n"
+                                          f"Do you really want to quit?"):
+            window.destroy()
+    else:
         window.destroy()
 
 
