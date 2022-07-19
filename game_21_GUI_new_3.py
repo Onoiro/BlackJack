@@ -44,6 +44,7 @@ ratio = 0
 gain = 0
 # имя игрока
 player_name = ""
+winner_date = ""
 
 game_time = timedelta(hours=0, minutes=0, seconds=0, milliseconds=0)
 game_active = True
@@ -322,6 +323,7 @@ def show_total_score():
     global ratio
     global best_player
     global player_name
+    global winner_date
 
     get_balance()
 
@@ -343,6 +345,7 @@ def show_total_score():
     if balance > best_balance:
         best_balance = balance
         best_player = player_name
+        winner_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
         best_records()
 
 
@@ -378,7 +381,7 @@ def best_records():
     # запись в файл имя игрока с лучшим балансом
     filename = 'best_player.json'
     with open(filename, 'w') as f:
-        json.dump(best_player, f)
+        json.dump(f"{best_player} {winner_date}", f)
 
 
 def btn_enough_disabled():
@@ -441,7 +444,7 @@ def update_time():
 
 
 def update_global_time():
-    time_lbl.config(text=f"{datetime.now():%H:%M:%S}")
+    time_lbl.config(text=f"{datetime.now():%H:%M:%S}", font=("Courier", 10))
     window.after(10, update_global_time)
 
 
@@ -460,12 +463,12 @@ window.geometry("460x560")
 window.resizable(0, 0)
 
 # показываю лучший баланс и имя лучшего игрока внизу игрового экрана
-lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("Courier", 12))
+lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("Courier", 10))
 lbl.place(x=10, y=530)
 
 # показываю текущее время
-time_lbl = Label(window, font=("Courier", 12))
-time_lbl.place(x=360, y=530)
+time_lbl = Label(window, font=("Courier", 10))
+time_lbl.place(x=370, y=530)
 # показываю время игры
 time_lbl_sec = Label(window, font=("Courier", 12))
 time_lbl_sec.place(x=360, y=15)
