@@ -50,6 +50,7 @@ game_active = True
 
 
 def init_name():
+    global player_name
     # инициализация игрока и ввод имени
     # запрос имени игрока
     lbl_name = Label(window, text="Who are you?", font=("Courier", 14))
@@ -66,6 +67,7 @@ def init_name():
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
+    global player_name
     # инициализация имени игрока
     player_name = name_entry.get()
     # убираю с экрана все поля, связанные с вводом имени игрока
@@ -320,6 +322,7 @@ def show_total_score():
     global best_balance
     global ratio
     global best_player
+    global player_name
 
     get_balance()
 
