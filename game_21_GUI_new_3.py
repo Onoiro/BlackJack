@@ -16,21 +16,45 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 cards = []
 # сколько денег у игрока
 balance = 1
-# лучший выигрыш в истории
+
+'''
+# конструкция, чтобы изначально запустить файл
+best_player = "Abo"
+filename = 'best_player.json'
+with open(filename, 'w') as f:
+    json.dump(best_player, f)'''
+
+# лучший показатель баланса, даже если игрок потом все проиграл
 filename = 'record.json'
 with open(filename) as f:
     best_balance = json.load(f)
-
-# имя игрока с лучшим результатом
-#best_player = "Abo"
-#filename = 'best_player.json'
-#with open(filename, 'w') as f:
-#    json.dump(best_player, f)
-
-# имя игрока с лучшим выигрышем
+# имя игрока с наибольшим достигнутым кол-вом $
 filename = 'best_player.json'
 with open (filename) as f:
     best_player = json.load(f)
+
+'''
+# конструкция, чтобы изначально запустить файлы
+biggest_win = 1
+filename = 'biggest_win.json'
+with open(filename, 'w') as f:
+    json.dump(biggest_win, f)
+biggest_win_player = ""
+filename = 'biggest_win_player.json'
+with open(filename, 'w') as f:
+    json.dump(biggest_win_player, f)'''
+# наибольший выигрыш
+filename = 'biggest_win.json'
+with open (filename) as f:
+    biggest_win = json.load(f)
+# имя игрока с наибольшим выигрышем
+filename = 'biggest_win_player.json'
+with open (filename) as f:
+    biggest_win_player = json.load(f)
+filename = 'biggest_win.json'
+with open(filename, 'w') as f:
+    json.dump(biggest_win, f)
+
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
@@ -44,7 +68,8 @@ ratio = 0
 gain = 0
 # имя игрока
 player_name = ""
-winner_date = ""
+best_balance_date = ""
+biggest_win_date = ""
 
 game_time = timedelta(hours=0, minutes=0, seconds=0, milliseconds=0)
 game_active = True
@@ -323,7 +348,6 @@ def show_total_score():
     global ratio
     global best_player
     global player_name
-    global winner_date
 
     get_balance()
 
@@ -343,10 +367,7 @@ def show_total_score():
 
     # определяю если текущий баланс лучще рекордного баланса
     if balance > best_balance:
-        best_balance = balance
-        best_player = player_name
-        winner_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-        best_records()
+        best_balance_record()
 
 
 def get_balance():
@@ -373,15 +394,35 @@ def play_again(lbls):
     ratio = 1
 
 
-def best_records():
-    # запись в файл лучшего баланса
+def best_balance_record():
+    # инициализация наибольшего баланса
+    best_balance = balance
+    best_player = player_name
+    best_balance_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
+    # запись в файл лучшего баланса (даже если потом все было проиграно)
     filename = 'record.json'
     with open(filename, 'w') as f:
         json.dump(best_balance, f)
     # запись в файл имя игрока с лучшим балансом
     filename = 'best_player.json'
     with open(filename, 'w') as f:
-        json.dump(f"{best_player} {winner_date}", f)
+        json.dump(f"{best_player} {best_balance_date}", f)
+
+def biggest_win_record():
+    # инициализация наибольшего выигрыша
+    global biggest_win_date
+    biggest_win = balance
+    biggest_win_player = player_name
+    biggest_win_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
+    # запись в файл наибольшего выигрыша
+    filename = 'biggest_win.json'
+    with open(filename, 'w') as f:
+        json.dump(biggest_win, f)
+    # запись в файл игрока с наивысшем выигрышем
+    filename = 'biggest_win_player.json'
+    with open(filename, 'w') as f:
+        json.dump(f"{biggest_win_player} {biggest_win_date}", f)
+
 
 
 def btn_enough_disabled():
@@ -455,6 +496,9 @@ def close():
     if balance > 0:
         if messagebox.askokcancel("Exit", f"{player_name}, you have {balance}$\n"
                                           f"Do you really want to quit?"):
+            if balance > biggest_win:
+                biggest_win_record()
+
             window.destroy()
     else:
         window.destroy()
@@ -468,9 +512,15 @@ window.title(f"Welcome to Oriono's Blackjack! Now is {datetime.now():%d}"
 window.geometry("460x560")
 window.resizable(0, 0)
 
-# показываю лучший баланс и имя лучшего игрока внизу игрового экрана
-lbl = Label(window, text=f"Biggest win: {best_player} {best_balance}$", font=("Courier", 10))
+# показываю лучший баланс и имя игрока внизу игрового экрана
+lbl = Label(window, text=f"Biggest balance: "
+                         f"{best_player} {best_balance}$", font=("Courier", 10))
 lbl.place(x=10, y=530)
+
+# показываю лучший выигрыш и имя игрока с лучшим выигрышем
+lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
+                         f"{biggest_win}$", font=("Courier", 10))
+lbl.place(x=10, y=510)
 
 # показываю текущее время
 time_lbl = Label(window, font=("Courier", 10))
