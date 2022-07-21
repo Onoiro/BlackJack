@@ -395,6 +395,8 @@ def play_again(lbls):
 
 
 def best_balance_record():
+    global best_balance
+    global best_player
     # инициализация наибольшего баланса
     best_balance = balance
     best_player = player_name
@@ -407,6 +409,16 @@ def best_balance_record():
     filename = 'best_player.json'
     with open(filename, 'w') as f:
         json.dump(f"{best_player} {best_balance_date}", f)
+    # заново загружаю данные о лучшем балансе и игроке
+    # лучший показатель баланса, даже если игрок потом все проиграл
+    filename = 'record.json'
+    with open(filename) as f:
+        best_balance = json.load(f)
+    # имя игрока с наибольшим достигнутым кол-вом $
+    filename = 'best_player.json'
+    with open(filename) as f:
+        best_player = json.load(f)
+
 
 def biggest_win_record():
     # инициализация наибольшего выигрыша
@@ -494,8 +506,8 @@ def close():
     global player_name
     # вывод окна с запросом выхода из игры
     if balance > 0:
-        if messagebox.askokcancel("Exit", f"{player_name}, you have {balance}$\n"
-                                          f"Do you really want to quit?"):
+        if messagebox.askokcancel("Exit",
+            f"{player_name}, you have {balance}$\nDo you really want to quit?"):
             if balance > biggest_win:
                 biggest_win_record()
 
