@@ -16,6 +16,8 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 cards = []
 # сколько денег у игрока
 balance = 1
+# кол-во раздач
+deal_count = 0
 
 '''
 # конструкция, чтобы изначально запустить файл
@@ -348,18 +350,19 @@ def show_total_score():
     global ratio
     global best_player
     global player_name
+    global deal_count
 
     get_balance()
 
-    lbl = Label(window, text="your money", font=("Courier", 10))
-    lbl.place(x=10, y=50, width=140, height=30)
-    total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
-    total_balance.place(x=10, y=80, width=140, height=30)
-
+    show_balance()
+    show_bet()
     show_gain()
+    show_deal_count()
 
     # кнопка Enough становится неактивной
     btn_enough_disabled()
+
+    deal_count += 1
 
     # если денег меньше 0$ - конец игры
     if balance < 0:
@@ -383,6 +386,7 @@ def play_again(lbls):
     global my_cards
     global pc_cards
     global ratio
+    global deal_count
     # карты игрока и PC обнуляются
     my_cards = []
     pc_cards = []
@@ -457,16 +461,32 @@ def btn_clear_disabled():
 
 def show_bet():
     # вывод на экран текущей ставки
-    lbl = Label(window, text=f"{bet}", font=("Courier", 14))
-    lbl.place(x=310, y=80, width=140, height=30)
+    lbl = Label(window, text="bet", font=("Courier", 10))
+    lbl.place(x=175, y=50)
+    lbl = Label(window, text=f"{bet}", font=("Courier", 18))
+    lbl.place(x=175, y=70)
 
 
 def show_gain():
     # показываю выигрыш на прошлой раздаче
-    lbl = Label(window, text="last gain", font=("Courier", 10))
-    lbl.place(x=160, y=50, width=140, height=30)
-    lbl = Label(window, text=f"{gain}$", font=("Courier", 14))
-    lbl.place(x=160, y=80, width=140, height=30)
+    lbl = Label(window, text="gain", font=("Courier", 10))
+    lbl.place(x=90, y=50)
+    lbl = Label(window, text=f"{gain}$", font=("Courier", 18))
+    lbl.place(x=90, y=70, width=40)
+
+def show_deal_count():
+    # показываю кол-во раздач
+    lbl = Label(window, text="deal", font=("Courier", 10))
+    lbl.place(x=250, y=50)
+    lbl = Label(window, text=f"{deal_count}", font=("Courier", 18))
+    lbl.place(x=250, y=70)
+
+def show_balance():
+    # показываю баланс игрока (сколько денег)
+    lbl = Label(window, text="money", font=("Courier", 10))
+    lbl.place(x=10, y=50)
+    total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
+    total_balance.place(x=10, y=70, width=40)
 
 
 def game_over():
@@ -545,12 +565,6 @@ time_lbl_sec.place(x=360, y=15)
 btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
-
-# показываю текущую ставку
-lbl = Label(window, text="bet", font=("Courier", 10))
-lbl.place(x=310, y=50, width=140, height=30)
-lbl = Label(window, text=f"{bet}", font=("Courier", 14))
-lbl.place(x=310, y=80, width=140, height=30)
 
 # кнопка Play again - карты обнуляются, новая сдача
 btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
