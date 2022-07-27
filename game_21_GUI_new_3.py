@@ -57,6 +57,17 @@ filename = 'biggest_win.json'
 with open(filename, 'w') as f:
     json.dump(biggest_win, f)
 
+'''players_accounts = {}
+filename = 'players_accounts.json'
+with open(filename, 'w') as f:
+    json.dump(players_accounts, f)'''
+filename = 'players_accounts.json'
+with open (filename) as f:
+    players_accounts = json.load(f)
+filename = 'players_accounts.json'
+with open (filename, 'w') as f:
+    json.dump(players_accounts, f)
+
 # карты игрока и компьютера
 my_cards = []
 pc_cards = []
