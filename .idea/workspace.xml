@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/best_player.json" beforeDir="false" afterPath="$PROJECT_DIR$/best_player.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" afterPath="$PROJECT_DIR$/record.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +19,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="67" column="23" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
+            <state relative-caret-position="120">
+              <caret line="454" selection-start-line="454" selection-end-line="454" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -49,10 +51,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="width" value="1366" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -66,6 +66,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/game_21.py" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -149,7 +150,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5014641" side_tool="true" weight="0.29245284" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49853587" visible="true" weight="0.22169812" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49853587" visible="true" weight="0.22100313" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -543,8 +544,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="67" column="23" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
+        <state relative-caret-position="120">
+          <caret line="454" selection-start-line="454" selection-end-line="454" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>

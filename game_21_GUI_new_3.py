@@ -5,7 +5,7 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 # Масти и номиналы карт
@@ -15,7 +15,7 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 # розданные карты
 cards = []
 # сколько денег у игрока
-balance = 1
+balance = 0
 # кол-во раздач
 deal_count = 0
 
@@ -57,16 +57,16 @@ filename = 'biggest_win.json'
 with open(filename, 'w') as f:
     json.dump(biggest_win, f)
 
-'''players_accounts = {}
-filename = 'players_accounts.json'
+#players_accounts = []
+'''filename = 'players_accounts.json'
 with open(filename, 'w') as f:
-    json.dump(players_accounts, f)'''
+    json.dump(players_accounts, f)
 filename = 'players_accounts.json'
 with open (filename) as f:
     players_accounts = json.load(f)
 filename = 'players_accounts.json'
 with open (filename, 'w') as f:
-    json.dump(players_accounts, f)
+    json.dump(players_accounts, f)'''
 
 # карты игрока и компьютера
 my_cards = []
@@ -451,6 +451,28 @@ def biggest_win_record():
         json.dump(f"{biggest_win_player} {biggest_win_date}", f)
 
 
+def players_accounts_record():
+    new_player = True
+
+    filename = 'players_accounts.json'
+    with open(filename) as f:
+        players_accounts = json.load(f)
+
+    for i in range(len(players_accounts)):
+        if players_accounts[i]['name'] == player_name:
+            players_accounts[i]['player_balance'] += balance
+            new_player = False
+            filename = 'players_accounts.json'
+            with open(filename, 'w') as f:
+                json.dump(players_accounts, f)
+
+    if new_player is True:
+        player = {'name': player_name, 'player_balance': balance}
+        players_accounts.append(player)
+        filename = 'players_accounts.json'
+        with open(filename, 'w') as f:
+            json.dump(players_accounts, f)
+
 
 def btn_enough_disabled():
     # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
@@ -545,6 +567,8 @@ def close():
             window.destroy()
     else:
         window.destroy()
+
+    players_accounts_record()
 
 
 
