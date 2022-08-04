@@ -215,42 +215,6 @@ def get_my_cards():
         # переход в функцию, отображающую общий счет
         show_total_score()
 
-    # если 21 очко на 2-х картах - BlackJack
-    elif my_points == 21 and len(my_cards) == 2:
-        #blackjack = True
-        ratio = 2
-        lbl = Label(window, text="Blackjack", font=("Courier", 12))
-        lbl.place(x=30, y=190)
-        lbls.append(lbl)
-    # если карт 5 и очков 21 или меньше - возможен выигрыш с тройной ставкой
-    elif len(my_cards) == 5 and my_points <= 21:
-        #five_cards = True
-        ratio = 3
-        lbl = Label(window, text="5 cards", font=("Courier", 12))
-        lbl.place(x=30, y=190)
-        lbls.append(lbl)
-    # если карт 6 и более и очков 21 или меньше - возможен выигрыш с четверной ставкой
-    elif len(my_cards) >= 6 and my_points <= 21:
-        ratio = 4
-        #six_cards = True
-        lbl = Label(window, text="6 cards", font=("Courier", 12))
-        lbl.place(x=30, y=190)
-        lbls.append(lbl)
-
-    elif len(my_cards) == 3:
-        count_7 = 0
-        for i in range(3):
-            for k in my_cards[i]:
-                if k[0] == '7':
-                    count_7 += 1
-        if count_7 == 3:
-            ratio = 5
-            lbl = Label(window, text="7 7 7", font=("Courier", 12))
-            lbl.place(x=30, y=190)
-            lbls.append(lbl)
-        else:
-            ratio = 1
-
 
 def get_pc_cards(my_points):
     # набор карт компа и расчет очков в зависимости от всех карт
@@ -288,6 +252,7 @@ def get_winner(my_points, pc_points):
 
     if pc_points > 21:
         # если у PC перебор
+        get_cards_set(my_points)
         lbl = Label(window, text="Too many", font=("Courier", 12))
         lbl.place(x=180, y=190)
         lbls.append(lbl)
@@ -296,18 +261,7 @@ def get_winner(my_points, pc_points):
         # определение победителя
         # и расчет выигрыша игрока в зависимости от расклада
         if my_points > pc_points:
-            '''if blackjack is True:
-                ratio = 2
-            elif five_cards is True:
-                ratio = 3
-            elif six_cards is True:
-                ratio = 4
-            elif seven_3 is True:
-                ratio = 5
-            else:
-                ratio = 1'''
-            #show_total_score()
-
+            get_cards_set(my_points)
         elif my_points == pc_points:
             # при равном кол-ве очков ставка увеличивается в 2 раза
             gain = 0
@@ -362,6 +316,44 @@ def get_winner(my_points, pc_points):
     btn_take.config(state='disabled')
 
 
+def get_cards_set(my_points):
+    global ratio
+    # если 21 очко на 2-х картах - BlackJack
+    if my_points == 21 and len(my_cards) == 2:
+        ratio = 2
+        lbl = Label(window, text="Blackjack", font=("Courier", 12))
+        lbl.place(x=30, y=190)
+        lbls.append(lbl)
+    # если карт 5 и очков 21 или меньше - возможен выигрыш с тройной ставкой
+    elif len(my_cards) == 5 and my_points <= 21:
+        ratio = 3
+        lbl = Label(window, text="5 cards", font=("Courier", 12))
+        lbl.place(x=30, y=190)
+        lbls.append(lbl)
+    # если карт 6 и более и очков 21 или меньше - возможен выигрыш с четверной ставкой
+    elif len(my_cards) >= 6 and my_points <= 21:
+        ratio = 4
+        lbl = Label(window, text="6 cards", font=("Courier", 12))
+        lbl.place(x=30, y=190)
+        lbls.append(lbl)
+    # если выпало 3 семерки
+    elif len(my_cards) == 3:
+        count_7 = 0
+        for i in range(3):
+            for k in my_cards[i]:
+                if k[0] == '7':
+                    count_7 += 1
+        if count_7 == 3:
+            ratio = 5
+            lbl = Label(window, text="7 7 7", font=("Courier", 12))
+            lbl.place(x=30, y=190)
+            lbls.append(lbl)
+        else:
+            ratio = 1
+    else:
+        ratio = 1
+
+
 def show_total_score():
     # вывод баланса игрока
     global best_balance
@@ -371,7 +363,6 @@ def show_total_score():
     global deal_count
 
     get_balance()
-
     show_balance()
     show_bet()
     show_gain()
@@ -380,6 +371,7 @@ def show_total_score():
     # кнопка Enough становится неактивной
     btn_enough_disabled()
 
+    # увеличиваю кол-во раздач на 1
     deal_count += 1
 
     # если денег меньше 0$ - конец игры
@@ -392,6 +384,7 @@ def show_total_score():
 
 
 def get_balance():
+    # определяю gain (выигрыш) и баланс в игре
     global balance
     global gain
     global ratio
@@ -459,12 +452,8 @@ def biggest_win_record():
 
 
 def players_accounts_record():
+    # пополнение тотального баланса игрока или создание нового аккаунта
     new_player = True
-
-    '''filename = 'players_accounts.json'
-    with open(filename) as f:
-        players_accounts = json.load(f)'''
-
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
             players_accounts[i]['player_balance'] += balance
@@ -472,7 +461,7 @@ def players_accounts_record():
             filename = 'players_accounts.json'
             with open(filename, 'w') as f:
                 json.dump(players_accounts, f)
-
+    # если введенного имени нет - создается новый аккаунт
     if new_player is True:
         player = {'name': player_name, 'player_balance': balance}
         players_accounts.append(player)
@@ -489,10 +478,12 @@ def btn_enough_disabled():
 
 
 def btn_take_disabled():
+    # кнопка Take неактивна
     btn_take.config(state='disabled')
 
 
 def btn_clear_disabled():
+    # кнопка Play again
     btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
                        command=lambda: play_again(lbls))
     btn_clear.place(x=310, y=110, width=140)
@@ -554,6 +545,7 @@ def game_over():
 
 
 def update_time():
+    # запуск времени игры если она началась
     global game_time
     global game_active
     if game_active is True:
@@ -566,6 +558,7 @@ def update_time():
 
 
 def update_global_time():
+    # показываю текущее время
     time_lbl.config(text=f"{datetime.now():%H:%M:%S}", font=("Courier", 10))
     window.after(10, update_global_time)
 
