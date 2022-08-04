@@ -14,8 +14,10 @@ card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4
 
 # розданные карты
 cards = []
-# сколько денег у игрока
+# сколько денег у игрока в текущей игре
 balance = 0
+# сколько всего денег у игрока
+player_money = 0
 # кол-во раздач
 deal_count = 0
 
@@ -58,15 +60,9 @@ with open(filename, 'w') as f:
     json.dump(biggest_win, f)
 
 #players_accounts = []
-'''filename = 'players_accounts.json'
-with open(filename, 'w') as f:
-    json.dump(players_accounts, f)
 filename = 'players_accounts.json'
-with open (filename) as f:
+with open(filename) as f:
     players_accounts = json.load(f)
-filename = 'players_accounts.json'
-with open (filename, 'w') as f:
-    json.dump(players_accounts, f)'''
 
 # карты игрока и компьютера
 my_cards = []
@@ -118,8 +114,19 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     lbl.place(x=10, y=10)
     # кнопка Take card становится активной после ввода имени игрока
     btn_take.config(state='normal')
+    # вызов функции определяющей общую сумму денег игрока
+    get_player_money()
     # вызов функции обновляющей текущее время
     update_time()
+
+
+def get_player_money():
+    global player_money
+    for i in range(len(players_accounts)):
+        if players_accounts[i]['name'] == player_name:
+            player_money = players_accounts[i]['player_balance']
+    # вызов функции для отображения общей суммы денег игрока
+    show_money()
 
 
 def deal():
@@ -454,9 +461,9 @@ def biggest_win_record():
 def players_accounts_record():
     new_player = True
 
-    filename = 'players_accounts.json'
+    '''filename = 'players_accounts.json'
     with open(filename) as f:
-        players_accounts = json.load(f)
+        players_accounts = json.load(f)'''
 
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
@@ -507,6 +514,7 @@ def show_gain():
     lbl = Label(window, text=f"{gain}$", font=("Courier", 18))
     lbl.place(x=90, y=70, width=40)
 
+
 def show_deal_count():
     # показываю кол-во раздач
     lbl = Label(window, text="deal", font=("Courier", 10))
@@ -514,12 +522,20 @@ def show_deal_count():
     lbl = Label(window, text=f"{deal_count}", font=("Courier", 18))
     lbl.place(x=250, y=70)
 
+
 def show_balance():
-    # показываю баланс игрока (сколько денег)
-    lbl = Label(window, text="money", font=("Courier", 10))
+    # показываю баланс игрока в текущей игре (сколько денег)
+    lbl = Label(window, text="balance", font=("Courier", 10))
     lbl.place(x=10, y=50)
     total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
     total_balance.place(x=10, y=70, width=40)
+
+def show_money():
+    # показываю сколько всего денег у игрока
+    lbl = Label(window, text="money", font=("Courier", 10))
+    lbl.place(x=400, y=50)
+    total_balance = Label(window, text=f"{player_money}$", font=("Courier", 14))
+    total_balance.place(x=380, y=75, width=70)
 
 
 def game_over():
