@@ -463,7 +463,8 @@ def players_accounts_record():
                 json.dump(players_accounts, f)
     # если введенного имени нет - создается новый аккаунт
     if new_player is True:
-        player = {'name': player_name, 'player_balance': balance}
+        register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
+        player = {'name': player_name, 'date of registration': register_date, 'player_balance': balance}
         players_accounts.append(player)
         filename = 'players_accounts.json'
         with open(filename, 'w') as f:
