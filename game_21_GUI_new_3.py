@@ -124,7 +124,7 @@ def get_player_money():
     global player_money
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
-            player_money = players_accounts[i]['player_balance']
+            player_money = players_accounts[i]['player balance']
     # вызов функции для отображения общей суммы денег игрока
     show_money()
 
@@ -456,7 +456,8 @@ def players_accounts_record():
     new_player = True
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
-            players_accounts[i]['player_balance'] += balance
+            players_accounts[i]['player balance'] += balance
+            players_accounts[i]['deals counter'] += deal_count
             new_player = False
             filename = 'players_accounts.json'
             with open(filename, 'w') as f:
@@ -464,7 +465,9 @@ def players_accounts_record():
     # если введенного имени нет - создается новый аккаунт
     if new_player is True:
         register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-        player = {'name': player_name, 'date of registration': register_date, 'player_balance': balance}
+        player = {'name': player_name,
+                  'date of registration': register_date,
+                  'player balance': balance, 'deals counter': deal_count}
         players_accounts.append(player)
         filename = 'players_accounts.json'
         with open(filename, 'w') as f:
