@@ -37,6 +37,7 @@ filename = 'best_player.json'
 with open (filename) as f:
     best_player = json.load(f)
 
+
 '''
 # конструкция, чтобы изначально запустить файлы
 biggest_win = 1
@@ -63,6 +64,10 @@ with open(filename, 'w') as f:
 filename = 'players_accounts.json'
 with open(filename) as f:
     players_accounts = json.load(f)
+
+filename = 'reachest_player.json'
+with open(filename) as f:
+    reachest_player = json.load(f)
 
 # карты игрока и компьютера
 my_cards = []
@@ -474,6 +479,23 @@ def players_accounts_record():
             json.dump(players_accounts, f)
 
 
+def get_reachest_player():
+    # выявляю игрока у которого больше всего денег
+    global reachest_player
+
+    max_balance = reachest_player['player balance']
+
+    for i in range(len(players_accounts)):
+        if players_accounts[i]['player balance'] > max_balance:
+            reachest_player = {'name': players_accounts[i]['name'],
+                               'player balance': players_accounts[i]['player balance']}
+
+    filename = 'reachest_player.json'
+    with open(filename, 'w') as f:
+        json.dump(reachest_player, f)
+
+
+
 def btn_enough_disabled():
     # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
     btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
@@ -582,7 +604,7 @@ def close():
         window.destroy()
 
     players_accounts_record()
-
+    get_reachest_player()
 
 
 window = Tk()
@@ -602,6 +624,11 @@ lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
                          f"{biggest_win}$", font=("Courier", 10))
 lbl.place(x=10, y=510)
 
+# показываю игрока, у которого больше всего денег
+lbl = Label(window, text=f"Reachest player: {reachest_player['name']} "
+                         f"{reachest_player['player balance']}$", font=("Courier", 10))
+lbl.place(x=10, y=490)
+
 # показываю текущее время
 time_lbl = Label(window, font=("Courier", 10))
 time_lbl.place(x=370, y=530)
@@ -619,6 +646,7 @@ btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
                    command=lambda: play_again(lbls))
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
+
 
 # текущее время
 update_global_time()
