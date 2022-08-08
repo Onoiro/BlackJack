@@ -487,7 +487,9 @@ def get_reachest_player():
 
     for i in range(len(players_accounts)):
         if players_accounts[i]['player balance'] > max_balance:
+            date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
             reachest_player = {'name': players_accounts[i]['name'],
+                               'date': date,
                                'player balance': players_accounts[i]['player balance']}
 
     filename = 'reachest_player.json'
@@ -625,8 +627,10 @@ lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
 lbl.place(x=10, y=510)
 
 # показываю игрока, у которого больше всего денег
-lbl = Label(window, text=f"Reachest player: {reachest_player['name']} "
-                         f"{reachest_player['player balance']}$", font=("Courier", 10))
+lbl = Label(window, text=f"Reachest player: {reachest_player['name']}"
+                         f" {reachest_player['date']} "
+                         f"{reachest_player['player balance']}$",
+            font=("Courier", 10))
 lbl.place(x=10, y=490)
 
 # показываю текущее время
