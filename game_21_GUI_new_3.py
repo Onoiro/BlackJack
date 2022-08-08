@@ -10,7 +10,9 @@ from datetime import datetime, timedelta, date
 
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
-card_values = ['ace', 'king', 'queen', 'jack', '10', '9', '8', '7', '6', '5', '4', '3', '2']
+card_values = \
+    ['ace', 'king', 'queen', 'jack',
+     '10', '9', '8', '7', '6', '5', '4', '3', '2']
 
 # розданные карты
 cards = []
@@ -96,13 +98,14 @@ def init_name():
     lbl_name = Label(window, text="Who are you?", font=("Courier", 14))
     lbl_name.place(x=10, y=10, width=140, height=30)
     # окно ввода
-    name_entry = Entry(textvariable=player_name, width=20, font=("Courier", 14))
+    name_entry = Entry(textvariable=player_name, width=20,
+                       font=("Courier", 14))
     name_entry.place(x=160, y=10, width=140, height=30)
     # установка курсора в поле ввода
     name_entry.focus()
     # кнопка подтверждения имени -> функция активирует кнопку Take card
     name_btn = Button(text="OK", width=16, font=("Courier", 14),
-                      command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
+            command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
     name_btn.place(x=310, y=10, width=140, height=30)
 
 
@@ -115,7 +118,8 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     name_btn.destroy()
     name_entry.destroy()
     # вместо поля для ввода имени вывожу приветствие
-    lbl = Label(window, text=f"Good luck {player_name}!", font=("Courier", 18))
+    lbl = Label(window, text=f"Good luck {player_name}!",
+                font=("Courier", 18))
     lbl.place(x=10, y=10)
     # кнопка Take card становится активной после ввода имени игрока
     btn_take.config(state='normal')
@@ -272,7 +276,8 @@ def get_winner(my_points, pc_points):
             gain = 0
             bet *= 2
             ratio = 0
-            lbl = Label(window, text='No one won. Double the bet.', font=("Courier", 12) )
+            lbl = Label(window, text='No one won. Double the bet.',
+                        font=("Courier", 12))
             lbl.place(x=30, y=190)
             # вывод ставки на экран
             show_bet()
@@ -483,24 +488,24 @@ def get_reachest_player():
     # выявляю игрока у которого больше всего денег
     global reachest_player
 
-    max_balance = reachest_player['player balance']
-
+    max_balance = players_accounts[0]['player balance']
+    print(max_balance)
     for i in range(len(players_accounts)):
-        if players_accounts[i]['player balance'] > max_balance:
+        if players_accounts[i]['player balance'] >= max_balance:
             date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
             reachest_player = {'name': players_accounts[i]['name'],
-                               'date': date,
-                               'player balance': players_accounts[i]['player balance']}
-
-    filename = 'reachest_player.json'
-    with open(filename, 'w') as f:
-        json.dump(reachest_player, f)
-
+                    'date': date,
+                    'player balance': players_accounts[i]['player balance']}
+            filename = 'reachest_player.json'
+            with open(filename, 'w') as f:
+                json.dump(reachest_player, f)
 
 
 def btn_enough_disabled():
     # кнопка Enough - игроку больше не нужно карт, ход переходит к PC
-    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16, command=get_pc_cards)
+    btn_enough = Button(window, text="Enough",
+                        font=("Courier", 12),
+                        width=16, command=get_pc_cards)
     btn_enough.place(x=160, y=110, width=140)
     btn_enough.config(state='disabled')
 
@@ -512,7 +517,8 @@ def btn_take_disabled():
 
 def btn_clear_disabled():
     # кнопка Play again
-    btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
+    btn_clear = Button(window, text="Play again",
+                       font=("Courier", 12), width=16,
                        command=lambda: play_again(lbls))
     btn_clear.place(x=310, y=110, width=140)
     btn_clear.config(state='disabled')
@@ -520,9 +526,11 @@ def btn_clear_disabled():
 
 def show_bet():
     # вывод на экран текущей ставки
-    lbl = Label(window, text="bet", font=("Courier", 10))
+    lbl = Label(window, text="bet",
+                font=("Courier", 10))
     lbl.place(x=175, y=50)
-    lbl = Label(window, text=f"{bet}", font=("Courier", 18))
+    lbl = Label(window, text=f"{bet}",
+                font=("Courier", 18))
     lbl.place(x=175, y=70)
 
 
@@ -530,15 +538,18 @@ def show_gain():
     # показываю выигрыш на прошлой раздаче
     lbl = Label(window, text="gain", font=("Courier", 10))
     lbl.place(x=90, y=50)
-    lbl = Label(window, text=f"{gain}$", font=("Courier", 18))
+    lbl = Label(window, text=f"{gain}$",
+                font=("Courier", 18))
     lbl.place(x=90, y=70, width=40)
 
 
 def show_deal_count():
     # показываю кол-во раздач
-    lbl = Label(window, text="deal", font=("Courier", 10))
+    lbl = Label(window, text="deal",
+                font=("Courier", 10))
     lbl.place(x=250, y=50)
-    lbl = Label(window, text=f"{deal_count}", font=("Courier", 18))
+    lbl = Label(window, text=f"{deal_count}",
+                font=("Courier", 18))
     lbl.place(x=250, y=70)
 
 
@@ -546,15 +557,36 @@ def show_balance():
     # показываю баланс игрока в текущей игре (сколько денег)
     lbl = Label(window, text="balance", font=("Courier", 10))
     lbl.place(x=10, y=50)
-    total_balance = Label(window, text=f"{balance}$", font=("Courier", 18))
+    total_balance = Label(window, text=f"{balance}$",
+                          font=("Courier", 18))
     total_balance.place(x=10, y=70, width=40)
 
 def show_money():
     # показываю сколько всего денег у игрока
     lbl = Label(window, text="money", font=("Courier", 10))
     lbl.place(x=400, y=50)
-    total_balance = Label(window, text=f"{player_money}$", font=("Courier", 14))
+    total_balance = Label(window, text=f"{player_money}$",
+                          font=("Courier", 14))
     total_balance.place(x=380, y=75, width=70)
+
+
+def show_best_records():
+    # показываю лучший баланс и имя игрока внизу игрового экрана
+    lbl = Label(window, text=f"Biggest balance: "
+                             f"{best_player} {best_balance}$", font=("Courier", 10))
+    lbl.place(x=10, y=530)
+
+    # показываю лучший выигрыш и имя игрока с лучшим выигрышем
+    lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
+                             f"{biggest_win}$", font=("Courier", 10))
+    lbl.place(x=10, y=510)
+
+    # показываю игрока, у которого больше всего денег
+    lbl = Label(window, text=f"Reachest player: {reachest_player['name']}"
+                             f" {reachest_player['date']} "
+                             f"{reachest_player['player balance']}$",
+                font=("Courier", 10))
+    lbl.place(x=10, y=490)
 
 
 def game_over():
@@ -597,7 +629,8 @@ def close():
     # вывод окна с запросом выхода из игры
     if balance > 0:
         if messagebox.askokcancel("Exit",
-            f"{player_name}, you have {balance}$\nDo you really want to quit?"):
+            f"{player_name}, you have {balance}$"
+            f"\nDo you really want to quit?"):
             if balance > biggest_win:
                 biggest_win_record()
 
@@ -616,32 +649,17 @@ window.title(f"Welcome to Oriono's Blackjack! Now is {datetime.now():%d}"
 window.geometry("460x560")
 window.resizable(0, 0)
 
-# показываю лучший баланс и имя игрока внизу игрового экрана
-lbl = Label(window, text=f"Biggest balance: "
-                         f"{best_player} {best_balance}$", font=("Courier", 10))
-lbl.place(x=10, y=530)
-
-# показываю лучший выигрыш и имя игрока с лучшим выигрышем
-lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
-                         f"{biggest_win}$", font=("Courier", 10))
-lbl.place(x=10, y=510)
-
-# показываю игрока, у которого больше всего денег
-lbl = Label(window, text=f"Reachest player: {reachest_player['name']}"
-                         f" {reachest_player['date']} "
-                         f"{reachest_player['player balance']}$",
-            font=("Courier", 10))
-lbl.place(x=10, y=490)
-
-# показываю текущее время
-time_lbl = Label(window, font=("Courier", 10))
-time_lbl.place(x=370, y=530)
 # показываю время игры
 time_lbl_sec = Label(window, font=("Courier", 12))
 time_lbl_sec.place(x=360, y=15)
 
+# показываю текущее время
+time_lbl = Label(window, font=("Courier", 10))
+time_lbl.place(x=370, y=530)
+
 # кнопка Take card - взять еще карту игроку
-btn_take = Button(window, text="Take card", font=("Courier", 12), width=16, command=get_my_cards)
+btn_take = Button(window, text="Take card", font=("Courier", 12),
+                  width=16, command=get_my_cards)
 btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
@@ -652,6 +670,7 @@ btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
 
 
+show_best_records()
 # текущее время
 update_global_time()
 # кнопка Enough неактивна
