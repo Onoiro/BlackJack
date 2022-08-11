@@ -10,8 +10,7 @@ from datetime import datetime, timedelta, date
 
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
-card_values = \
-    ['ace', 'king', 'queen', 'jack',
+card_values = ['ace', 'king', 'queen', 'jack',
      '10', '9', '8', '7', '6', '5', '4', '3', '2']
 
 # розданные карты
@@ -23,53 +22,14 @@ player_money = 0
 # кол-во раздач
 deal_count = 0
 
-'''
-# конструкция, чтобы изначально запустить файл
-best_player = "Abo"
-filename = 'best_player.json'
-with open(filename, 'w') as f:
-    json.dump(best_player, f)'''
-
-# лучший показатель баланса, даже если игрок потом все проиграл
-filename = 'record.json'
+filename = 'best_records.json'
 with open(filename) as f:
-    best_balance = json.load(f)
-# имя игрока с наибольшим достигнутым кол-вом $
-filename = 'best_player.json'
-with open (filename) as f:
-    best_player = json.load(f)
-
-
-'''
-# конструкция, чтобы изначально запустить файлы
-biggest_win = 1
-filename = 'biggest_win.json'
-with open(filename, 'w') as f:
-    json.dump(biggest_win, f)
-biggest_win_player = ""
-filename = 'biggest_win_player.json'
-with open(filename, 'w') as f:
-    json.dump(biggest_win_player, f)'''
-# наибольший выигрыш
-filename = 'biggest_win.json'
-with open (filename) as f:
-    biggest_win = json.load(f)
-# имя игрока с наибольшим выигрышем
-filename = 'biggest_win_player.json'
-with open (filename) as f:
-    biggest_win_player = json.load(f)
-filename = 'biggest_win.json'
-with open(filename, 'w') as f:
-    json.dump(biggest_win, f)
+    best_records = json.load(f)
 
 #players_accounts = []
 filename = 'players_accounts.json'
 with open(filename) as f:
     players_accounts = json.load(f)
-
-filename = 'reachest_player.json'
-with open(filename) as f:
-    reachest_player = json.load(f)
 
 # карты игрока и компьютера
 my_cards = []
@@ -84,8 +44,6 @@ ratio = 0
 gain = 0
 # имя игрока
 player_name = ""
-best_balance_date = ""
-biggest_win_date = ""
 
 game_time = timedelta(hours=0, minutes=0, seconds=0, milliseconds=0)
 game_active = True
@@ -366,7 +324,6 @@ def get_cards_set(my_points):
 
 def show_total_score():
     # вывод баланса игрока
-    global best_balance
     global ratio
     global best_player
     global player_name
@@ -389,6 +346,7 @@ def show_total_score():
         game_over()
 
     # определяю если текущий баланс лучще рекордного баланса
+    best_balance = best_records[2]['balance']
     if balance > best_balance:
         best_balance_record()
 
@@ -420,45 +378,25 @@ def play_again(lbls):
 
 
 def best_balance_record():
-    global best_balance
-    global best_player
-    # инициализация наибольшего баланса
-    best_balance = balance
-    best_player = player_name
-    best_balance_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
     # запись в файл лучшего баланса (даже если потом все было проиграно)
-    filename = 'record.json'
+    best_balance_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
+    best_records[2]['name'] = player_name
+    best_records[2]['date'] = best_balance_date
+    best_records[2]['balance'] = balance
+    filename = 'best_records.json'
     with open(filename, 'w') as f:
-        json.dump(best_balance, f)
-    # запись в файл имя игрока с лучшим балансом
-    filename = 'best_player.json'
-    with open(filename, 'w') as f:
-        json.dump(f"{best_player} {best_balance_date}", f)
-    # заново загружаю данные о лучшем балансе и игроке
-    # лучший показатель баланса, даже если игрок потом все проиграл
-    filename = 'record.json'
-    with open(filename) as f:
-        best_balance = json.load(f)
-    # имя игрока с наибольшим достигнутым кол-вом $
-    filename = 'best_player.json'
-    with open(filename) as f:
-        best_player = json.load(f)
+        json.dump(best_records, f)
 
 
 def biggest_win_record():
     # инициализация наибольшего выигрыша
-    global biggest_win_date
-    biggest_win = balance
-    biggest_win_player = player_name
     biggest_win_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-    # запись в файл наибольшего выигрыша
-    filename = 'biggest_win.json'
+    best_records[1]['name'] = player_name
+    best_records[1]['date'] = biggest_win_date
+    best_records[1]['balance'] = balance
+    filename = 'best_records.json'
     with open(filename, 'w') as f:
-        json.dump(biggest_win, f)
-    # запись в файл игрока с наивысшем выигрышем
-    filename = 'biggest_win_player.json'
-    with open(filename, 'w') as f:
-        json.dump(f"{biggest_win_player} {biggest_win_date}", f)
+        json.dump(best_records, f)
 
 
 def players_accounts_record():
@@ -484,21 +422,20 @@ def players_accounts_record():
             json.dump(players_accounts, f)
 
 
-def get_reachest_player():
+def get_richest_player():
     # выявляю игрока у которого больше всего денег
-    global reachest_player
+    #global richest_player
 
     max_balance = players_accounts[0]['player balance']
-    print(max_balance)
     for i in range(len(players_accounts)):
         if players_accounts[i]['player balance'] >= max_balance:
             date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-            reachest_player = {'name': players_accounts[i]['name'],
-                    'date': date,
-                    'player balance': players_accounts[i]['player balance']}
-            filename = 'reachest_player.json'
-            with open(filename, 'w') as f:
-                json.dump(reachest_player, f)
+            best_records[0]['name'] = players_accounts[i]['name']
+            best_records[0]['date'] = date
+            best_records[0]['balance'] = players_accounts[i]['player balance']
+            filename = 'best_records.json'
+            with open (filename, 'w') as f:
+                json.dump(best_records, f)
 
 
 def btn_enough_disabled():
@@ -526,11 +463,9 @@ def btn_clear_disabled():
 
 def show_bet():
     # вывод на экран текущей ставки
-    lbl = Label(window, text="bet",
-                font=("Courier", 10))
+    lbl = Label(window, text="bet", font=("Courier", 10))
     lbl.place(x=175, y=50)
-    lbl = Label(window, text=f"{bet}",
-                font=("Courier", 18))
+    lbl = Label(window, text=f"{bet}", font=("Courier", 18))
     lbl.place(x=175, y=70)
 
 
@@ -538,18 +473,15 @@ def show_gain():
     # показываю выигрыш на прошлой раздаче
     lbl = Label(window, text="gain", font=("Courier", 10))
     lbl.place(x=90, y=50)
-    lbl = Label(window, text=f"{gain}$",
-                font=("Courier", 18))
+    lbl = Label(window, text=f"{gain}$", font=("Courier", 18))
     lbl.place(x=90, y=70, width=40)
 
 
 def show_deal_count():
     # показываю кол-во раздач
-    lbl = Label(window, text="deal",
-                font=("Courier", 10))
+    lbl = Label(window, text="deal", font=("Courier", 10))
     lbl.place(x=250, y=50)
-    lbl = Label(window, text=f"{deal_count}",
-                font=("Courier", 18))
+    lbl = Label(window, text=f"{deal_count}", font=("Courier", 18))
     lbl.place(x=250, y=70)
 
 
@@ -571,23 +503,26 @@ def show_money():
 
 
 def show_best_records():
-    # показываю лучший баланс и имя игрока внизу игрового экрана
-    lbl = Label(window, text=f"Biggest balance: "
-                             f"{best_player} {best_balance}$", font=("Courier", 10))
-    lbl.place(x=10, y=530)
-
-    # показываю лучший выигрыш и имя игрока с лучшим выигрышем
-    lbl = Label(window, text=f"Biggest win: {biggest_win_player} "
-                             f"{biggest_win}$", font=("Courier", 10))
-    lbl.place(x=10, y=510)
-
     # показываю игрока, у которого больше всего денег
-    lbl = Label(window, text=f"Reachest player: {reachest_player['name']}"
-                             f" {reachest_player['date']} "
-                             f"{reachest_player['player balance']}$",
-                font=("Courier", 10))
+    lbl = Label(window, text=f"{best_records[0]['category']}: "
+                             f"{best_records[0]['name']} "
+                             f"{best_records[0]['date']} "
+                             f"{best_records[0]['balance']}$", font=("Courier", 10))
     lbl.place(x=10, y=490)
 
+    # показываю лучший выигрыш и имя игрока с лучшим выигрышем
+    lbl = Label(window, text=f"{best_records[1]['category']}:    "
+                             f"{best_records[1]['name']} "
+                             f"{best_records[1]['date']} "
+                             f"{best_records[1]['balance']}$", font=("Courier", 10))
+    lbl.place(x=10, y=510)
+
+    # показываю лучший баланс и имя игрока внизу игрового экрана
+    lbl = Label(window, text=f"{best_records[2]['category']}:   "
+                             f"{best_records[2]['name']} "
+                             f"{best_records[2]['date']} "
+                             f"{best_records[2]['balance']}$",font=("Courier", 10))
+    lbl.place(x=10, y=530)
 
 def game_over():
     # конец игры, когда у игрока заканчиваются деньги
@@ -595,7 +530,8 @@ def game_over():
 
     game_active = False
 
-    lbl = Label(window, text="You don't have any more money", font=("Courier", 11))
+    lbl = Label(window, text="You don't have any more money",
+                font=("Courier", 11))
     lbl.place(x=90, y=240)
     lbl = Label(window, text="GAME OVER", font=("Courier", 40))
     lbl.place(x=80, y=280)
@@ -619,7 +555,8 @@ def update_time():
 
 def update_global_time():
     # показываю текущее время
-    time_lbl.config(text=f"{datetime.now():%H:%M:%S}", font=("Courier", 10))
+    time_lbl.config(text=f"{datetime.now():%H:%M:%S}",
+                    font=("Courier", 10))
     window.after(10, update_global_time)
 
 
@@ -631,7 +568,7 @@ def close():
         if messagebox.askokcancel("Exit",
             f"{player_name}, you have {balance}$"
             f"\nDo you really want to quit?"):
-            if balance > biggest_win:
+            if balance > best_records[1]['balance']:
                 biggest_win_record()
 
             window.destroy()
@@ -639,7 +576,7 @@ def close():
         window.destroy()
 
     players_accounts_record()
-    get_reachest_player()
+    get_richest_player()
 
 
 window = Tk()

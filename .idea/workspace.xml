@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6bb127d1-0655-4a30-b050-e11e3a3c46c4" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/best_player.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/game_21_GUI_new_3.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_21_GUI_new_3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +18,8 @@
       <file leaf-file-name="game_21_GUI_new_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14652">
-              <caret line="666" column="77" lean-forward="true" selection-start-line="666" selection-start-column="77" selection-end-line="666" selection-end-column="77" />
+            <state relative-caret-position="198">
+              <caret line="570" column="50" selection-start-line="570" selection-start-column="50" selection-end-line="570" selection-end-column="50" />
               <folding>
                 <element signature="e#94#114#0" expanded="true" />
               </folding>
@@ -47,7 +49,8 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
     <option name="width" value="1366" />
     <option name="height" value="728" />
   </component>
@@ -541,8 +544,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/game_21_GUI_new_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14652">
-          <caret line="666" column="77" lean-forward="true" selection-start-line="666" selection-start-column="77" selection-end-line="666" selection-end-column="77" />
+        <state relative-caret-position="198">
+          <caret line="570" column="50" selection-start-line="570" selection-start-column="50" selection-end-line="570" selection-end-column="50" />
           <folding>
             <element signature="e#94#114#0" expanded="true" />
           </folding>
