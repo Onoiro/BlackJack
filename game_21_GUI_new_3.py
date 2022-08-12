@@ -5,7 +5,7 @@ from tkinter import*
 from random import randint
 import json
 from tkinter import messagebox
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 
 # Масти и номиналы карт
@@ -45,14 +45,13 @@ gain = 0
 # имя игрока
 player_name = ""
 
-game_time = timedelta(hours=0, minutes=0, seconds=0, milliseconds=0)
+game_time = timedelta(hours=0, minutes=0, seconds=0)
 game_active = True
 
 
 def init_name():
     global player_name
     # инициализация игрока и ввод имени
-    # запрос имени игрока
     lbl_name = Label(window, text="Who are you?", font=("Courier", 14))
     lbl_name.place(x=10, y=10, width=140, height=30)
     # окно ввода
@@ -63,12 +62,14 @@ def init_name():
     name_entry.focus()
     # кнопка подтверждения имени -> функция активирует кнопку Take card
     name_btn = Button(text="OK", width=16, font=("Courier", 14),
-            command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
+                      command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
     name_btn.place(x=310, y=10, width=140, height=30)
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
     global player_name
+    # если не ввести имя, то кнопка Take не активна
+    btn_take.config(state='disabled')
     # инициализация имени игрока
     player_name = name_entry.get()
     # убираю с экрана все поля, связанные с вводом имени игрока
@@ -79,8 +80,9 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     lbl = Label(window, text=f"Good luck {player_name}!",
                 font=("Courier", 18))
     lbl.place(x=10, y=10)
-    # кнопка Take card становится активной после ввода имени игрока
-    btn_take.config(state='normal')
+    # кнопка Take card становится активной только после ввода имени игрока
+    if player_name != "":
+        btn_take.config(state='normal')
     # вызов функции определяющей общую сумму денег игрока
     get_player_money()
     # вызов функции обновляющей текущее время
@@ -114,7 +116,8 @@ def deal():
 
 
 def count_points(value):
-    # Определение кол-ва очков в зависимости от номинала карты по первой букве card
+    # Определение кол-ва очков в зависимости от номинала карты
+    # по первой букве card
     points = 0
     for x in value:
         # если карта ace (туз)
@@ -138,7 +141,6 @@ def count_points(value):
 def get_my_cards():
     # набор карт игрока
     global ratio
-
     # кнонка play again пока недоступна
     btn_clear.config(state='disabled')
     # вызываю функцию deal, чтобы выдать мне карту
@@ -148,7 +150,7 @@ def get_my_cards():
     for i in range(len(my_cards)):
         # вывожу на экран мои карты
         card_image = PhotoImage(file=f"images/{my_cards[i]}.gif")
-        #card_image = card_image.subsample(2, 2)
+        # card_image = card_image.subsample(2, 2)
         lbl = Label(window)
         lbl.image = card_image
         lbl['image'] = lbl.image
@@ -162,7 +164,8 @@ def get_my_cards():
         lbls.append(lbl)
 
     # если очков достаточно - нажимаем кнопку Enough
-    btn_enough = Button(window, text="Enough", font=("Courier", 12), width=16,
+    btn_enough = Button(window, text="Enough",
+                        font=("Courier", 12), width=16,
                         command=lambda: get_pc_cards(my_points))
     btn_enough.place(x=160, y=110, width=140)
 
@@ -325,7 +328,6 @@ def get_cards_set(my_points):
 def show_total_score():
     # вывод баланса игрока
     global ratio
-    global best_player
     global player_name
     global deal_count
 
@@ -402,10 +404,12 @@ def biggest_win_record():
 def players_accounts_record():
     # пополнение тотального баланса игрока или создание нового аккаунта
     new_player = True
+    # проверяю, если такой игрок есть, то пополняю баланс и кол-во раздач
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
             players_accounts[i]['player balance'] += balance
             players_accounts[i]['deals counter'] += deal_count
+            # игрок уже есть в списке аккаунтов
             new_player = False
             filename = 'players_accounts.json'
             with open(filename, 'w') as f:
@@ -415,7 +419,8 @@ def players_accounts_record():
         register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
         player = {'name': player_name,
                   'date of registration': register_date,
-                  'player balance': balance, 'deals counter': deal_count}
+                  'player balance': balance,
+                  'deals counter': deal_count}
         players_accounts.append(player)
         filename = 'players_accounts.json'
         with open(filename, 'w') as f:
@@ -424,8 +429,6 @@ def players_accounts_record():
 
 def get_richest_player():
     # выявляю игрока у которого больше всего денег
-    #global richest_player
-
     max_balance = players_accounts[0]['player balance']
     for i in range(len(players_accounts)):
         if players_accounts[i]['player balance'] >= max_balance:
@@ -493,6 +496,7 @@ def show_balance():
                           font=("Courier", 18))
     total_balance.place(x=10, y=70, width=40)
 
+
 def show_money():
     # показываю сколько всего денег у игрока
     lbl = Label(window, text="money", font=("Courier", 10))
@@ -503,26 +507,32 @@ def show_money():
 
 
 def show_best_records():
+    # вывод на экран лучших результатов
+
     # показываю игрока, у которого больше всего денег
     lbl = Label(window, text=f"{best_records[0]['category']}: "
                              f"{best_records[0]['name']} "
                              f"{best_records[0]['date']} "
-                             f"{best_records[0]['balance']}$", font=("Courier", 10))
+                             f"{best_records[0]['balance']}$",
+                            font=("Courier", 10))
     lbl.place(x=10, y=490)
 
     # показываю лучший выигрыш и имя игрока с лучшим выигрышем
     lbl = Label(window, text=f"{best_records[1]['category']}:    "
                              f"{best_records[1]['name']} "
                              f"{best_records[1]['date']} "
-                             f"{best_records[1]['balance']}$", font=("Courier", 10))
+                             f"{best_records[1]['balance']}$",
+                            font=("Courier", 10))
     lbl.place(x=10, y=510)
 
     # показываю лучший баланс и имя игрока внизу игрового экрана
     lbl = Label(window, text=f"{best_records[2]['category']}:   "
                              f"{best_records[2]['name']} "
                              f"{best_records[2]['date']} "
-                             f"{best_records[2]['balance']}$",font=("Courier", 10))
+                             f"{best_records[2]['balance']}$",
+                            font=("Courier", 10))
     lbl.place(x=10, y=530)
+
 
 def game_over():
     # конец игры, когда у игрока заканчиваются деньги
@@ -561,8 +571,6 @@ def update_global_time():
 
 
 def close():
-    global balance
-    global player_name
     # вывод окна с запросом выхода из игры
     if balance > 0:
         if messagebox.askokcancel("Exit",
@@ -601,7 +609,8 @@ btn_take.place(x=10, y=110, width=140)
 btn_take.config(state='disabled')
 
 # кнопка Play again - карты обнуляются, новая сдача
-btn_clear = Button(window, text="Play again", font=("Courier", 12), width=16,
+btn_clear = Button(window, text="Play again",
+                   font=("Courier", 12), width=16,
                    command=lambda: play_again(lbls))
 btn_clear.place(x=310, y=110, width=140)
 btn_clear.config(state='disabled')
