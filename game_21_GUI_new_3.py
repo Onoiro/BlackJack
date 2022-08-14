@@ -62,7 +62,8 @@ def init_name():
     name_entry.focus()
     # кнопка подтверждения имени -> функция активирует кнопку Take card
     name_btn = Button(text="OK", width=16, font=("Courier", 14),
-                      command=lambda: btn_take_normal(lbl_name, name_btn, name_entry))
+                      command=lambda:
+                      btn_take_normal(lbl_name, name_btn, name_entry))
     name_btn.place(x=310, y=10, width=140, height=30)
 
 
@@ -72,21 +73,25 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     btn_take.config(state='disabled')
     # инициализация имени игрока
     player_name = name_entry.get()
-    # убираю с экрана все поля, связанные с вводом имени игрока
-    lbl_name.destroy()
-    name_btn.destroy()
-    name_entry.destroy()
-    # вместо поля для ввода имени вывожу приветствие
-    lbl = Label(window, text=f"Good luck {player_name}!",
-                font=("Courier", 18))
-    lbl.place(x=10, y=10)
-    # кнопка Take card становится активной только после ввода имени игрока
-    if player_name != "":
-        btn_take.config(state='normal')
-    # вызов функции определяющей общую сумму денег игрока
-    get_player_money()
-    # вызов функции обновляющей текущее время
-    update_time()
+    # длинна имени игрока не должна превышать 12 символов
+    if len(player_name) <= 12:
+        # убираю с экрана все поля, связанные с вводом имени игрока
+        lbl_name.destroy()
+        name_btn.destroy()
+        name_entry.destroy()
+        # вместо поля для ввода имени вывожу приветствие
+        lbl = Label(window, text=f"Good luck {player_name}!",
+                    font=("Courier", 18))
+        lbl.place(x=10, y=10)
+        # кнопка Take card становится активной только после ввода имени игрока
+        if player_name != "":
+            btn_take.config(state='normal')
+        # вызов функции определяющей общую сумму денег игрока
+        get_player_money()
+        # вызов функции обновляющей текущее время
+        update_time()
+    else:
+        pass
 
 
 def get_player_money():
