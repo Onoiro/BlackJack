@@ -47,7 +47,7 @@ player_name = ""
 
 id = 0
 # pin-code
-pin = 11
+pin = ''
 
 game_time = timedelta(hours=0, minutes=0, seconds=0)
 game_active = True
@@ -77,39 +77,24 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
     btn_take.config(state='disabled')
     # инициализация имени игрока
     player_name = name_entry.get()
-    # длина имени игрока не должна превышать 12 символов
+    # длина имени игрока должна иметь хотя бы 1 символ и не превышать 12
     if len(player_name) <= 12 and player_name != "":
         # убираю с экрана все поля, связанные с вводом имени игрока
         lbl_name.destroy()
         name_btn.destroy()
         name_entry.destroy()
 
-        #create_players_accounts()
-        # вместо поля для ввода имени вывожу приветствие
-        lbl = Label(window, text=f"Good luck {player_name}!",
-                    font=("Courier", 18))
-        lbl.place(x=10, y=10)
-        # кнопка Take card становится активной только после ввода имени игрока
-        btn_take.config(state='normal')
-        # вызов функции определяющей общую сумму денег игрока
-        get_player_money()
-        # вызов функции обновляющей текущее время
-        update_time()
-
-        # вызов функции определяющей самого богатого игрока
-        get_richest_player()
-
+        # создать новый аккаунт либо назначить id если такой игрок есть
         players_accounts_record()
-
+        get_pin()
     else:
         pass
 
 
 def players_accounts_record():
     global id
-    # пополнение тотального баланса игрока или создание нового аккаунта
     new_player = True
-    # проверяю, если такой игрок есть, то пополняю баланс и кол-во раздач
+    # проверяю, если такой игрок есть, то присваиваю id в текущей игре
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
             id = i
@@ -129,6 +114,57 @@ def players_accounts_record():
             json.dump(players_accounts, f)
 
 
+def get_pin():
+
+    lbl_pin = Label(window, text="Enter pin-code", font=("Courier", 14))
+    lbl_pin.place(x=10, y=10, width=140, height=30)
+    # окно ввода
+    pin_entry = Entry(textvariable=pin, width=20,
+                       font=("Courier", 14))
+    pin_entry.place(x=160, y=10, width=140, height=30)
+    # установка курсора в поле ввода
+    pin_entry.focus()
+
+    # кнопка подтверждения имени -> функция активирует кнопку Take card
+    pin_btn = Button(text="OK", width=16, font=("Courier", 14),
+                      command=lambda:
+                      pin_validation(lbl_pin, pin_btn, pin_entry))
+    pin_btn.place(x=310, y=10, width=140, height=30)
+
+
+def pin_validation(lbl_pin, pin_btn, pin_entry):
+    global pin
+    pin = pin_entry.get()
+
+    if pin == players_accounts[id]['pin code']:
+        lbl_pin.destroy()
+        pin_btn.destroy()
+        pin_entry.destroy()
+        good_luck_player()
+    else:
+        get_pin()
+
+
+def create_pin():
+    pass
+
+
+def good_luck_player():
+    # вместо поля для ввода имени вывожу приветствие
+    lbl = Label(window, text=f"Good luck {player_name}!",
+                font=("Courier", 18))
+    lbl.place(x=10, y=10)
+    # кнопка Take card становится активной только после ввода имени игрока
+    btn_take.config(state='normal')
+    # вызов функции определяющей общую сумму денег игрока
+    get_player_money()
+    # вызов функции обновляющей текущее время
+    update_time()
+
+    # вызов функции определяющей самого богатого игрока
+    get_richest_player()
+
+
 def get_richest_player():
     global best_records
     # выявляю игрока у которого больше всего денег
@@ -139,66 +175,17 @@ def get_richest_player():
             best_records[0]['name'] = players_accounts[i]['name']
             best_records[0]['date'] = date
             best_records[0]['balance'] = players_accounts[i]['player balance']
+            # запись в файл
             filename = 'best_records.json'
             with open (filename, 'w') as f:
                 json.dump(best_records, f)
+    # выгрузка из файла
     filename = 'best_records.json'
     with open(filename) as f:
         best_records = json.load(f)
+
+    # вызов функции показывающей лучшие результаты
     show_best_records()
-
-
-def create_players_accounts():
-    global pin
-    global player_name
-    global players_accounts
-    for i in range(len(players_accounts)):
-        if player_name == players_accounts[i]['name']:
-            pin = players_accounts[i]['pin code']
-            get_pin(pin)
-        else:
-            create_pin(pin)
-            register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-            player = {'name': player_name,
-                      'pin code': pin,
-                      'date of registration': register_date,
-                      'player balance': balance,
-                      'deals counter': deal_count}
-            players_accounts.append(player)
-            filename = 'players_accounts.json'
-            with open(filename, 'w') as f:
-                json.dump(players_accounts, f)
-
-
-def get_pin(pin):
-
-    lbl_pin = Label(window, text="Enter pin-code", font=("Courier", 14))
-    lbl_pin.place(x=10, y=10, width=140, height=30)
-    # окно ввода
-    pin_entry = Entry(textvariable=pin, width=20,
-                       font=("Courier", 14))
-    pin_entry.place(x=160, y=10, width=140, height=30)
-    # установка курсора в поле ввода
-    pin_entry.focus()
-    pin = pin_entry.get()
-
-    # кнопка подтверждения имени -> функция активирует кнопку Take card
-    pin_btn = Button(text="OK", width=16, font=("Courier", 14),
-                      command=lambda:
-                      pin_validation(lbl_pin, pin_btn, pin_entry, pin))
-    pin_btn.place(x=310, y=10, width=140, height=30)
-
-
-def pin_validation(lbl_pin, pin_btn, pin_entry, pin):
-
-    if pin == players_accounts['pin code']:
-        lbl_pin.destroy()
-        pin_btn.destroy()
-        pin_entry.destroy()
-
-
-def create_pin(pin):
-    pass
 
 
 def get_player_money():
