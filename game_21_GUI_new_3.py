@@ -167,32 +167,34 @@ def good_luck_player():
     lbl.place(x=10, y=10)
     # кнопка Take card становится активной только после ввода имени игрока
     btn_take.config(state='normal')
+    # вызов функции определяющей самого богатого игрока
+    get_richest_player()
     # вызов функции определяющей общую сумму денег игрока
     get_player_money()
     # вызов функции обновляющей текущее время
     update_time()
-    # вызов функции определяющей самого богатого игрока
-    get_richest_player()
 
 
 def get_richest_player():
     global best_records
     # выявляю игрока у которого больше всего денег
-    max_balance = best_records[0]['balance']
+    max_balance = players_accounts[0]['player balance']
     for i in range(len(players_accounts)):
         if players_accounts[i]['player balance'] > max_balance:
+            max_balance = players_accounts[i]['player balance']
             date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
             best_records[0]['name'] = players_accounts[i]['name']
             best_records[0]['date'] = date
-            best_records[0]['balance'] = players_accounts[i]['player balance']
+            best_records[0]['balance'] = max_balance
             # запись в файл
             filename = 'best_records.json'
             with open (filename, 'w') as f:
                 json.dump(best_records, f)
-    # выгрузка из файла
-    filename = 'best_records.json'
-    with open(filename) as f:
-        best_records = json.load(f)
+            # выгрузка из файла
+            filename = 'best_records.json'
+            with open(filename) as f:
+                best_records = json.load(f)
+
 
     # вызов функции показывающей лучшие результаты
     show_best_records()
@@ -577,8 +579,8 @@ def show_money():
 
 
 def show_best_records():
+    global best_records
     # вывод на экран лучших результатов
-
     # показываю игрока, у которого больше всего денег
     lbl = Label(window, text=f"{best_records[0]['category']}: "
                              f"{best_records[0]['name']} "
