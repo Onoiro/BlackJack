@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 # Масти и номиналы карт
 card_suits = ['diamonds', 'hearts', 'clubs', 'spades']
 card_values = ['ace', 'king', 'queen', 'jack',
-     '10', '9', '8', '7', '6', '5', '4', '3', '2']
+    '10', '9', '8', '7', '6', '5', '4', '3', '2']
 
 # розданные карты
 cards = []
@@ -22,11 +22,12 @@ player_money = 0
 # кол-во раздач
 deal_count = 0
 
+# выгружаю в память лучшие результаты
 filename = 'best_records.json'
 with open(filename) as f:
     best_records = json.load(f)
 
-#players_accounts = []
+# выгружаю аккаунты игроков
 filename = 'players_accounts.json'
 with open(filename) as f:
     players_accounts = json.load(f)
@@ -36,7 +37,7 @@ my_cards = []
 pc_cards = []
 # выведенные на экран надписи и картинки
 lbls = []
-# текущий коэффицент начисления очков за победу - ставка (bet)
+# ставка (bet) - текущий коэффицент начисления очков за победу
 bet = 1
 # коэффициент увеличения очков в зависимости от набора карт
 ratio = 0
@@ -46,25 +47,27 @@ gain = 0
 player_name = ""
 
 id = 0
-# pin-code
+# пин-код
 pin = ''
-
+# время с начала игры
 game_time = timedelta(hours=0, minutes=0, seconds=0)
+# идет игра
 game_active = True
 
 
 def init_name():
+    """ Создание полей для ввода имени игрока """
     global player_name
-    # инициализация игрока и ввод имени
+    # создание надписи "Кто ты?"
     lbl_name = Label(window, text="Who are you?", font=("Courier", 14))
     lbl_name.place(x=10, y=10, width=140, height=30)
-    # окно ввода
+    # окно ввода имени
     name_entry = Entry(textvariable=player_name, width=20,
                        font=("Courier", 14))
     name_entry.place(x=160, y=10, width=140, height=30)
-    # установка курсора в поле ввода
+    # установка курсора в поле ввода имени
     name_entry.focus()
-    # кнопка подтверждения имени -> функция активирует кнопку Take card
+    # кнопка подтверждения имени -> инициализация имени игрока
     name_btn = Button(text="OK", width=16, font=("Courier", 14),
                       command=lambda:
                       btn_take_normal(lbl_name, name_btn, name_entry))
@@ -72,6 +75,7 @@ def init_name():
 
 
 def btn_take_normal(lbl_name, name_btn, name_entry):
+    """ Инициализация имени игрока(активация кнопки Take card) """
     global player_name
     # если не ввести имя, то кнопка Take не активна
     btn_take.config(state='disabled')
@@ -83,15 +87,16 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
         lbl_name.destroy()
         name_btn.destroy()
         name_entry.destroy()
-
         # создать новый аккаунт либо назначить id если такой игрок есть
         players_accounts_record()
+        # ввести пин-код
         get_pin()
     else:
         pass
 
 
 def players_accounts_record():
+    """ Создание нового аккаунта """
     global id
     new_player = True
     # проверяю, если такой игрок есть, то присваиваю id в текущей игре
@@ -100,7 +105,7 @@ def players_accounts_record():
             id = i
             new_player = False
 
-    # если введенного имени нет - создается новый аккаунт
+    # если введенного имени не существует в файле - создается новый аккаунт
     if new_player is True:
         register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
         player = {'name': player_name,
@@ -115,8 +120,9 @@ def players_accounts_record():
 
 
 def get_pin():
-
-    lbl_pin = Label(window, text="Enter pin-code", font=("Courier", 14))
+    """ Создание полей для ввода пин-кода """
+    # создание надписи "Введите пин"
+    lbl_pin = Label(window, text="Enter pin", font=("Courier", 14))
     lbl_pin.place(x=10, y=10, width=140, height=30)
     # окно ввода
     pin_entry = Entry(textvariable=pin, width=20,
@@ -124,8 +130,7 @@ def get_pin():
     pin_entry.place(x=160, y=10, width=140, height=30)
     # установка курсора в поле ввода
     pin_entry.focus()
-
-    # кнопка подтверждения имени -> функция активирует кнопку Take card
+    # кнопка подтверждения -> перейти на проверку соответствия пин-кода
     pin_btn = Button(text="OK", width=16, font=("Courier", 14),
                       command=lambda:
                       pin_validation(lbl_pin, pin_btn, pin_entry))
@@ -133,15 +138,19 @@ def get_pin():
 
 
 def pin_validation(lbl_pin, pin_btn, pin_entry):
+    """ Проверка соответствия пин-кода """
     global pin
+    # инициализация пин-кода
     pin = pin_entry.get()
-
+    # если пин соответствует - удаляю все поля и перехожу к приветствию
     if pin == players_accounts[id]['pin code']:
         lbl_pin.destroy()
         pin_btn.destroy()
         pin_entry.destroy()
+        # перейти к приветствию игрока
         good_luck_player()
     else:
+        # если пин не соответствует - нужно вводить заново
         get_pin()
 
 
@@ -150,7 +159,9 @@ def create_pin():
 
 
 def good_luck_player():
-    # вместо поля для ввода имени вывожу приветствие
+    """Пин-код соответствует - приветствую игрока"""
+
+    # вместо поля для ввода имени и пин-кода вывожу приветствие
     lbl = Label(window, text=f"Good luck {player_name}!",
                 font=("Courier", 18))
     lbl.place(x=10, y=10)
@@ -160,7 +171,6 @@ def good_luck_player():
     get_player_money()
     # вызов функции обновляющей текущее время
     update_time()
-
     # вызов функции определяющей самого богатого игрока
     get_richest_player()
 
