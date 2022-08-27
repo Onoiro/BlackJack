@@ -53,6 +53,7 @@ pin = ''
 game_time = timedelta(hours=0, minutes=0, seconds=0)
 # идет игра
 game_active = True
+new_player = True
 
 
 def init_name():
@@ -96,27 +97,17 @@ def btn_take_normal(lbl_name, name_btn, name_entry):
 
 
 def players_accounts_record():
-    """ Создание нового аккаунта """
+    """ Присвоение id аккаунта """
     global id
-    new_player = True
+    global new_player
     # проверяю, если такой игрок есть, то присваиваю id в текущей игре
     for i in range(len(players_accounts)):
         if players_accounts[i]['name'] == player_name:
             id = i
             new_player = False
-
-    # если введенного имени не существует в файле - создается новый аккаунт
+    # если введенного имени не существует в файле - id = длине списка аккаунтов
     if new_player is True:
-        register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
-        player = {'name': player_name,
-                  'pin code': pin,
-                  'date of registration': register_date,
-                  'player balance': balance,
-                  'deals counter': deal_count}
-        players_accounts.append(player)
-        filename = 'players_accounts.json'
-        with open(filename, 'w') as f:
-            json.dump(players_accounts, f)
+        id = len(players_accounts)
 
 
 def get_pin():
@@ -125,8 +116,7 @@ def get_pin():
     lbl_pin = Label(window, text="Enter pin", font=("Courier", 14))
     lbl_pin.place(x=10, y=10, width=140, height=30)
     # окно ввода
-    pin_entry = Entry(textvariable=pin, width=20,
-                       font=("Courier", 14))
+    pin_entry = Entry(textvariable=pin, width=20, font=("Courier", 14))
     pin_entry.place(x=160, y=10, width=140, height=30)
     # установка курсора в поле ввода
     pin_entry.focus()
@@ -142,25 +132,52 @@ def pin_validation(lbl_pin, pin_btn, pin_entry):
     global pin
     # инициализация пин-кода
     pin = pin_entry.get()
-    # если пин соответствует - удаляю все поля и перехожу к приветствию
-    if pin == players_accounts[id]['pin code']:
-        lbl_pin.destroy()
-        pin_btn.destroy()
-        pin_entry.destroy()
-        # перейти к приветствию игрока
-        good_luck_player()
+    if new_player is False:
+        # если пин соответствует - удаляю все поля и перехожу к приветствию
+        if pin == players_accounts[id]['pin code']:
+            destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
+        else:
+            # если пин не соответствует - нужно вводить заново
+            get_pin()
     else:
-        # если пин не соответствует - нужно вводить заново
-        get_pin()
+        # если игрок новый - создать новый аккаунт
+        create_players_accounts(lbl_pin, pin_btn, pin_entry)
 
 
-def create_pin():
-    pass
+def create_players_accounts(lbl_pin, pin_btn, pin_entry):
+    """ Создание нового аккаунта """
+    global pin
+    # определить дату регистрации
+    register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
+    # создать нового игрока
+    player = {'name': player_name,
+              'pin code': pin,
+              'date of registration': register_date,
+              'player balance': balance,
+              'deals counter': deal_count}
+    # добавить нового игрока к списку всех игроков
+    players_accounts.append(player)
+    # присвоить пин-код новому игроку
+    pin = players_accounts[id]['pin code']
+    # записать в файл данные о новом игроке
+    filename = 'players_accounts.json'
+    with open(filename, 'w') as f:
+        json.dump(players_accounts, f)
+    # удалить все поля для ввода пин-кода
+    destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
+
+
+def destroy_pin_entry(lbl_pin, pin_btn, pin_entry):
+    """ Удаление всех полей для ввода пин-кода """
+    lbl_pin.destroy()
+    pin_btn.destroy()
+    pin_entry.destroy()
+    # перейти к приветствию игрока
+    good_luck_player()
 
 
 def good_luck_player():
-    """Пин-код соответствует - приветствую игрока"""
-
+    """ Пин-код соответствует - приветствую игрока """
     # вместо поля для ввода имени и пин-кода вывожу приветствие
     lbl = Label(window, text=f"Good luck {player_name}!",
                 font=("Courier", 18))
