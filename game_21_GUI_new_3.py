@@ -139,6 +139,7 @@ def pin_validation(lbl_pin, pin_btn, pin_entry):
             destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
             good_luck_player()
         else:
+            destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
             # если пин не соответствует - нужно вводить заново
             get_pin()
     else:
