@@ -124,29 +124,34 @@ def get_pin():
     pin_btn = Button(text="OK", width=16, font=("Courier", 14),
                       command=lambda:
                       pin_validation(lbl_pin, pin_btn, pin_entry))
-    pin_btn.place(x=310, y=10, width=140, height=30)
+    pin_btn.place(x=310, y=10, width=140, height=40)
 
 
 def pin_validation(lbl_pin, pin_btn, pin_entry):
     """ Проверка соответствия пин-кода """
     global pin
+    global new_player
     # инициализация пин-кода
     pin = pin_entry.get()
     if new_player is False:
         # если пин соответствует - удаляю все поля и перехожу к приветствию
         if pin == players_accounts[id]['pin code']:
             destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
+            good_luck_player()
         else:
             # если пин не соответствует - нужно вводить заново
             get_pin()
     else:
-        # если игрок новый - создать новый аккаунт
-        create_players_accounts(lbl_pin, pin_btn, pin_entry)
+        create_player_account()
+        new_player = False
+        destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
+        get_pin()
 
 
-def create_players_accounts(lbl_pin, pin_btn, pin_entry):
+def create_player_account():
     """ Создание нового аккаунта """
-    global pin
+    #global pin
+    global players_accounts
     # определить дату регистрации
     register_date = f"{datetime.strftime(datetime.now(),'%d.%m.%y')}"
     # создать нового игрока
@@ -157,14 +162,14 @@ def create_players_accounts(lbl_pin, pin_btn, pin_entry):
               'deals counter': deal_count}
     # добавить нового игрока к списку всех игроков
     players_accounts.append(player)
-    # присвоить пин-код новому игроку
-    pin = players_accounts[id]['pin code']
     # записать в файл данные о новом игроке
     filename = 'players_accounts.json'
     with open(filename, 'w') as f:
         json.dump(players_accounts, f)
-    # удалить все поля для ввода пин-кода
-    destroy_pin_entry(lbl_pin, pin_btn, pin_entry)
+    # выгрузить данные о новом игроке
+    filename = 'players_accounts.json'
+    with open(filename) as f:
+        players_accounts = json.load(f)
 
 
 def destroy_pin_entry(lbl_pin, pin_btn, pin_entry):
@@ -172,8 +177,6 @@ def destroy_pin_entry(lbl_pin, pin_btn, pin_entry):
     lbl_pin.destroy()
     pin_btn.destroy()
     pin_entry.destroy()
-    # перейти к приветствию игрока
-    good_luck_player()
 
 
 def good_luck_player():
